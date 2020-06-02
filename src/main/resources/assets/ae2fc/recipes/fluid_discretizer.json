@@ -1,0 +1,33 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "ae2fc:fluid_discretizer",
+    "count": 1
+  },
+  "pattern": [
+    "ipi",
+    "smt",
+    "ipi"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "p": {
+      "item": "appliedenergistics2:material",
+      "data": 24
+    },
+    "s": {
+      "item": "appliedenergistics2:part",
+      "data": 221
+    },
+    "m": {
+      "item": "appliedenergistics2:condenser"
+    },
+    "t": {
+      "item": "appliedenergistics2:part",
+      "data": 220
+    }
+  }
+}
