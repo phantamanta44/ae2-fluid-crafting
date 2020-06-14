@@ -5,7 +5,6 @@ import appeng.util.InventoryAdaptor;
 import appeng.util.inv.AdaptorItemHandler;
 import appeng.util.inv.IInventoryDestination;
 import appeng.util.inv.ItemSlot;
-import appeng.util.inv.OpenItemSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -120,8 +119,11 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
         public ItemSlot next() {
             if (nextSlotIndex < tanks.length) {
                 FluidStack fluid = tanks[nextSlotIndex].getContents();
-                return new OpenItemSlot(
-                        nextSlotIndex++, fluid != null ? ItemFluidPacket.newStack(fluid) : ItemStack.EMPTY, false);
+                ItemSlot slot = new ItemSlot();
+                slot.setSlot(nextSlotIndex++);
+                slot.setItemStack(fluid != null ? ItemFluidPacket.newStack(fluid) : ItemStack.EMPTY);
+                Ae2Reflect.setItemSlotExtractable(slot, false);
+                return slot;
             } else {
                 ItemSlot slot = itemSlots.next();
                 slot.setSlot(nextSlotIndex++);

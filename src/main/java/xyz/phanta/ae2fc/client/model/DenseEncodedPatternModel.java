@@ -1,6 +1,5 @@
 package xyz.phanta.ae2fc.client.model;
 
-import appeng.client.render.crafting.Ae2ModelHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -12,6 +11,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.common.model.IModelState;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
 import xyz.phanta.ae2fc.constant.NameConst;
 
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class DenseEncodedPatternModel implements IModel {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return Ae2ModelHelper.bakeEncodedPatternModel(baseModel, PerspectiveMapWrapper.getTransforms(state));
+        return Ae2ReflectClient.bakeEncodedPatternModel(baseModel, PerspectiveMapWrapper.getTransforms(state));
     }
 
     public static class Loader implements ICustomModelLoader {
