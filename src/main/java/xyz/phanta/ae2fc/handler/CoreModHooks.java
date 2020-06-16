@@ -2,7 +2,6 @@ package xyz.phanta.ae2fc.handler;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.InventoryAdaptor;
-import appeng.util.inv.AdaptorItemHandler;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -37,14 +36,13 @@ public class CoreModHooks {
     public static InventoryAdaptor wrapInventory(@Nullable TileEntity tile, EnumFacing face) {
         if (tile != null) {
             // sometimes i wish i had the monadic version from 1.15
-            if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face)) {
-                return new FluidConvertingInventoryAdaptor(
-                        tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)
-                                ? Objects.requireNonNull(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)) : null,
-                        Objects.requireNonNull(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face)));
-            } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)) {
-                return new AdaptorItemHandler(Objects.requireNonNull(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)));
-            }
+            return new FluidConvertingInventoryAdaptor(
+                    tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)
+                            ? Objects.requireNonNull(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face))
+                            : null,
+                    tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face)
+                            ? Objects.requireNonNull(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face))
+                            : null);
         }
         return null;
     }

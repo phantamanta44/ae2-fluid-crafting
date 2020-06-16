@@ -20,9 +20,10 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Nullable
     private final InventoryAdaptor invItems;
+    @Nullable
     private final IFluidHandler invFluids;
 
-    public FluidConvertingInventoryAdaptor(@Nullable IItemHandler invItems, IFluidHandler invFluids) {
+    public FluidConvertingInventoryAdaptor(@Nullable IItemHandler invItems, @Nullable IFluidHandler invFluids) {
         this.invItems = invItems != null ? new AdaptorItemHandler(invItems) : null;
         this.invFluids = invFluids;
     }
@@ -30,14 +31,17 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     @Override
     public ItemStack addItems(ItemStack toBeAdded) {
         if (toBeAdded.getItem() instanceof ItemFluidPacket) {
-            FluidStack fluid = ItemFluidPacket.getFluidStack(toBeAdded);
-            if (fluid != null) {
-                int filled = invFluids.fill(fluid, true);
-                if (filled > 0) {
-                    fluid.amount -= filled;
-                    return ItemFluidPacket.newStack(fluid);
+            if (invFluids != null) {
+                FluidStack fluid = ItemFluidPacket.getFluidStack(toBeAdded);
+                if (fluid != null) {
+                    int filled = invFluids.fill(fluid, true);
+                    if (filled > 0) {
+                        fluid.amount -= filled;
+                        return ItemFluidPacket.newStack(fluid);
+                    }
                 }
             }
+            return toBeAdded;
         }
         return invItems != null ? invItems.addItems(toBeAdded) : toBeAdded;
     }
@@ -45,14 +49,17 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
     @Override
     public ItemStack simulateAdd(ItemStack toBeSimulated) {
         if (toBeSimulated.getItem() instanceof ItemFluidPacket) {
-            FluidStack fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
-            if (fluid != null) {
-                int filled = invFluids.fill(fluid, false);
-                if (filled > 0) {
-                    fluid.amount -= filled;
-                    return ItemFluidPacket.newStack(fluid);
+            if (invFluids != null) {
+                FluidStack fluid = ItemFluidPacket.getFluidStack(toBeSimulated);
+                if (fluid != null) {
+                    int filled = invFluids.fill(fluid, false);
+                    if (filled > 0) {
+                        fluid.amount -= filled;
+                        return ItemFluidPacket.newStack(fluid);
+                    }
                 }
             }
+            return toBeSimulated;
         }
         return invItems != null ? invItems.simulateAdd(toBeSimulated) : toBeSimulated;
     }
@@ -79,10 +86,12 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Override
     public boolean containsItems() {
-        for (IFluidTankProperties tank : invFluids.getTankProperties()) {
-            FluidStack fluid = tank.getContents();
-            if (fluid != null && fluid.amount > 0) {
-                return true;
+        if (invFluids != null) {
+            for (IFluidTankProperties tank : invFluids.getTankProperties()) {
+                FluidStack fluid = tank.getContents();
+                if (fluid != null && fluid.amount > 0) {
+                    return true;
+                }
             }
         }
         return invItems != null && invItems.containsItems();
@@ -90,13 +99,15 @@ public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
 
     @Override
     public boolean hasSlots() {
-        return invFluids.getTankProperties().length > 0 || (invItems != null && invItems.hasSlots());
+        return (invFluids != null && invFluids.getTankProperties().length > 0)
+                || (invItems != null && invItems.hasSlots());
     }
 
     @Override
     public Iterator<ItemSlot> iterator() {
         return new SlotIterator(
-                invFluids.getTankProperties(), invItems != null ? invItems.iterator() : Collections.emptyIterator());
+                invFluids != null ? invFluids.getTankProperties() : new IFluidTankProperties[0],
+                invItems != null ? invItems.iterator() : Collections.emptyIterator());
     }
 
     private static class SlotIterator implements Iterator<ItemSlot> {
