@@ -5,6 +5,7 @@ import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.block.BlockFluidDiscretizer;
 import xyz.phanta.ae2fc.block.BlockFluidPacketDecoder;
 import xyz.phanta.ae2fc.block.BlockFluidPatternEncoder;
+import xyz.phanta.ae2fc.block.BlockIngredientBuffer;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.handler.RegistryHandler;
 
@@ -17,11 +18,14 @@ public class FcBlocks {
     public static BlockFluidPatternEncoder FLUID_PATTERN_ENCODER;
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_FLUID_PACKET_DECODER)
     public static BlockFluidPacketDecoder FLUID_PACKET_DECODER;
+    @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_INGREDIENT_BUFFER)
+    public static BlockFluidPacketDecoder INGREDIENT_BUFFER;
 
     public static void init(RegistryHandler regHandler) {
         regHandler.block(NameConst.BLOCK_FLUID_DISCRETIZER, new BlockFluidDiscretizer());
         regHandler.block(NameConst.BLOCK_FLUID_PATTERN_ENCODER, new BlockFluidPatternEncoder());
         regHandler.block(NameConst.BLOCK_FLUID_PACKET_DECODER, new BlockFluidPacketDecoder());
+        regHandler.block(NameConst.BLOCK_INGREDIENT_BUFFER, new BlockIngredientBuffer());
     }
 
 }

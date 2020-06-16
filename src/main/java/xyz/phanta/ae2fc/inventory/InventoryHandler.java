@@ -7,8 +7,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import xyz.phanta.ae2fc.client.gui.GuiFluidPacketDecoder;
 import xyz.phanta.ae2fc.client.gui.GuiFluidPatternEncoder;
+import xyz.phanta.ae2fc.client.gui.GuiIngredientBuffer;
 import xyz.phanta.ae2fc.tile.TileFluidPacketDecoder;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
+import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
 
 import javax.annotation.Nullable;
 
@@ -32,6 +34,13 @@ public class InventoryHandler implements IGuiHandler {
                 }
                 break;
             }
+            case 2: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileIngredientBuffer) {
+                    return new ContainerIngredientBuffer(player.inventory, (TileIngredientBuffer)tile);
+                }
+                break;
+            }
         }
         return null;
     }
@@ -51,6 +60,13 @@ public class InventoryHandler implements IGuiHandler {
                 TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
                 if (tile instanceof TileFluidPacketDecoder) {
                     return new GuiFluidPacketDecoder(player.inventory, (TileFluidPacketDecoder)tile);
+                }
+                break;
+            }
+            case 2: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileIngredientBuffer) {
+                    return new GuiIngredientBuffer(player.inventory, (TileIngredientBuffer)tile);
                 }
                 break;
             }
