@@ -38,6 +38,18 @@ Using this, patterns for recipes that require more than a stack of fluid drops c
 AE2 Fluid Crafting also comes with a handy JEI integration module that allows the fluid pattern encoder to encode any JEI recipe involving fluids.
 This is the recommended way to play with the mod, since encoding patterns by hand is a little cumbersome.
 
+### Ingredient Buffer
+
+Sometimes, it becomes necessary to route different fluids and items in a single recipe to separate machines.
+This is a problem, as the ME Interface will only export to a block if it can export its entire inventory at once.
+A simple solution is to use some sort of buffer as the destination for the interface, then piping the fluids and items out of that buffer as needed.
+To this end, we have the **Ingredient Buffer**, a useful device that functions as both a chest and a tank.
+
+The ingredient buffer can store up to nine item stacks and four tanks of fluid in its inventory.
+It doesn't automatically export, so you'll need to use some external means of extracting items and fluids.
+All tanks and item slots are accessible from any side of the device, so filtered pipes are recommended for separating the contents.
+If you end up with fluid in the buffer that you don't want, you can void the contents of the tanks from the GUI.
+
 ### Fluid Packets
 
 This mod being experimental, it is possible that fluid insertion might sometimes fail, leaving you with a weird item called a "fluid packet".
