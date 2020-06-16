@@ -64,6 +64,11 @@ public class TileFluidDiscretizer extends AENetworkTile implements IGridTickable
     }
 
     @Override
+    public boolean canBeRotated() {
+        return false;
+    }
+
+    @Override
     public int getPriority() {
         return priority;
     }

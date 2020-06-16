@@ -37,6 +37,11 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
     }
 
     @Override
+    public boolean canBeRotated() {
+        return false;
+    }
+
+    @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
                 || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;

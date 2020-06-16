@@ -49,6 +49,11 @@ public class TileFluidPacketDecoder extends AENetworkTile implements IGridTickab
     }
 
     @Override
+    public boolean canBeRotated() {
+        return false;
+    }
+
+    @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
