@@ -124,12 +124,14 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
     @Override
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
+        invItems.readFromNBT(data, "ItemInv");
         invFluids.readFromNBT(data, "FluidInv");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
+        invItems.writeToNBT(data, "ItemInv");
         invFluids.writeToNBT(data, "FluidInv");
         return data;
     }
