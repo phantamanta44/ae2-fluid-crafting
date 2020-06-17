@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -73,13 +74,16 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
     @Override
     protected void writeToStream(ByteBuf data) throws IOException {
         super.writeToStream(data);
-        int mask = 0;
+        for (int i = 0; i < invItems.getSlots(); i++) {
+            ByteBufUtils.writeItemStack(data, invItems.getStackInSlot(i));
+        }
+        int fluidMask = 0;
         for (int i = 0; i < invFluids.getSlots(); i++) {
             if (invFluids.getFluidInSlot(i) != null) {
-                mask |= 1 << i;
+                fluidMask |= 1 << i;
             }
         }
-        data.writeByte(mask);
+        data.writeByte(fluidMask);
         for (int i = 0; i < invFluids.getSlots(); i++) {
             IAEFluidStack fluid = invFluids.getFluidInSlot(i);
             if (fluid != null) {
@@ -91,9 +95,16 @@ public class TileIngredientBuffer extends AEBaseInvTile implements IAEFluidInven
     @Override
     protected boolean readFromStream(ByteBuf data) throws IOException {
         boolean changed = super.readFromStream(data);
-        int mask = data.readByte();
+        for (int i = 0; i < invItems.getSlots(); i++) {
+            ItemStack stack = ByteBufUtils.readItemStack(data);
+            if (!ItemStack.areItemStacksEqual(stack, invItems.getStackInSlot(i))) {
+                invItems.setStackInSlot(i, stack);
+                changed = true;
+            }
+        }
+        int fluidMask = data.readByte();
         for (int i = 0; i < invFluids.getSlots(); i++) {
-            if ((mask & (1 << i)) != 0) {
+            if ((fluidMask & (1 << i)) != 0) {
                 IAEFluidStack fluid = AEFluidStack.fromPacket(data);
                 if (fluid != null) { // this shouldn't happen, but better safe than sorry
                     IAEFluidStack origFluid = invFluids.getFluidInSlot(i);
