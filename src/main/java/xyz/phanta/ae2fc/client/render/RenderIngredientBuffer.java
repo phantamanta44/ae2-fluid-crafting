@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
@@ -24,15 +25,18 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
     public void render(TileIngredientBuffer tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableLighting();
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         IItemHandler inv = tile.getInternalInventory();
         for (int i = 0; i < inv.getSlots(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             if (!stack.isEmpty()) {
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(0.6F, 0.6F, 0.6F);
+                float scale = stack.getItem() instanceof ItemBlock ? 0.36F : 0.64F;
+                GlStateManager.scale(scale, scale, scale);
                 GlStateManager.rotate((getWorld().getTotalWorldTime() + partialTicks) * 6F, 0F, 1F, 0F);
                 RenderItem renderer = Minecraft.getMinecraft().getRenderItem();
                 renderer.renderItem(stack, renderer.getItemModelWithOverrides(stack, getWorld(), null));
@@ -44,7 +48,6 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
         for (IFluidTankProperties tank : tile.getFluidInventory().getTankProperties()) {
             TextureAtlasSprite fluidSprite = FluidRenderUtils.prepareRender(tank.getContents());
             if (fluidSprite != null) {
-                bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 Tessellator tess = Tessellator.getInstance();
                 BufferBuilder buf = tess.getBuffer();
                 // not necessarily the most efficient way to draw a cube, but probably the least tedious
