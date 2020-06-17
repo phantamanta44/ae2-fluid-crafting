@@ -76,6 +76,9 @@ public class GuiIngredientBuffer extends AEBaseGui {
             if (aeFluidStack != null) {
                 TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(aeFluidStack.getFluidStack());
                 if (sprite != null) {
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(
+                            GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
                     int height = Math.round(TANK_HEIGHT * (float)Math.min(1D, Math.max(0D,
                             aeFluidStack.getStackSize() / (double)fluidInv.getTankProperties()[i].getCapacity())));
                     while (height > 0D) {
