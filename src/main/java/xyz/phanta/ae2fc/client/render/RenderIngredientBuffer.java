@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
+import xyz.phanta.ae2fc.client.util.FluidRenderUtils;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
 
 public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngredientBuffer> {
@@ -42,11 +42,9 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
         }
 
         for (IFluidTankProperties tank : tile.getFluidInventory().getTankProperties()) {
-            FluidStack fluid = tank.getContents();
-            if (fluid != null && fluid.amount > 0) {
+            TextureAtlasSprite fluidSprite = FluidRenderUtils.prepareRender(tank.getContents());
+            if (fluidSprite != null) {
                 bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                TextureAtlasSprite fluidSprite = Minecraft.getMinecraft().getTextureMapBlocks()
-                        .getAtlasSprite(fluid.getFluid().getStill(fluid).toString());
                 Tessellator tess = Tessellator.getInstance();
                 BufferBuilder buf = tess.getBuffer();
                 // not necessarily the most efficient way to draw a cube, but probably the least tedious
@@ -65,6 +63,7 @@ public class RenderIngredientBuffer extends TileEntitySpecialRenderer<TileIngred
             }
         }
 
+        GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.popMatrix();
     }
 

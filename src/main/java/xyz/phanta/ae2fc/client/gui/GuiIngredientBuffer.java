@@ -14,10 +14,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.client.gui.component.MouseRegionManager;
+import xyz.phanta.ae2fc.client.util.FluidRenderUtils;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerIngredientBuffer;
 import xyz.phanta.ae2fc.network.CPacketDumpTank;
@@ -72,33 +72,34 @@ public class GuiIngredientBuffer extends AEBaseGui {
         BufferBuilder buf = tess.getBuffer();
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         for (int i = 0; i < 4; i++) {
-            IAEFluidStack fluid = fluidInv.getFluidInSlot(i);
-            if (fluid != null) {
-                FluidStack fluidStack = fluid.getFluidStack();
-                TextureAtlasSprite sprite = mc.getTextureMapBlocks()
-                        .getAtlasSprite(fluidStack.getFluid().getStill(fluidStack).toString());
-                int height = Math.round(TANK_HEIGHT * (float)Math.min(1D, Math.max(0D,
-                        fluid.getStackSize() / (double)fluidInv.getTankProperties()[i].getCapacity())));
-                while (height > 0D) {
-                    buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-                    double x1 = TANK_X + i * TANK_X_OFF, y1 = TANK_Y + TANK_HEIGHT - height;
-                    double x2 = x1 + TANK_WIDTH, y2 = y1 + Math.min(height, TANK_WIDTH);
-                    double u1 = sprite.getMinU(), v1 = sprite.getMinV(), u2 = sprite.getMaxU(), v2 = sprite.getMaxV();
-                    if (height < TANK_WIDTH) {
-                        v2 = v1 + (v2 - v1) * (height / (double)TANK_WIDTH);
-                        height = 0;
-                    } else {
-                        //noinspection SuspiciousNameCombination
-                        height -= TANK_WIDTH;
+            IAEFluidStack aeFluidStack = fluidInv.getFluidInSlot(i);
+            if (aeFluidStack != null) {
+                TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(aeFluidStack.getFluidStack());
+                if (sprite != null) {
+                    int height = Math.round(TANK_HEIGHT * (float)Math.min(1D, Math.max(0D,
+                            aeFluidStack.getStackSize() / (double)fluidInv.getTankProperties()[i].getCapacity())));
+                    while (height > 0D) {
+                        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+                        double x1 = TANK_X + i * TANK_X_OFF, y1 = TANK_Y + TANK_HEIGHT - height;
+                        double x2 = x1 + TANK_WIDTH, y2 = y1 + Math.min(height, TANK_WIDTH);
+                        double u1 = sprite.getMinU(), v1 = sprite.getMinV(), u2 = sprite.getMaxU(), v2 = sprite.getMaxV();
+                        if (height < TANK_WIDTH) {
+                            v2 = v1 + (v2 - v1) * (height / (double)TANK_WIDTH);
+                            height = 0;
+                        } else {
+                            //noinspection SuspiciousNameCombination
+                            height -= TANK_WIDTH;
+                        }
+                        buf.pos(x1, y1, 0D).tex(u1, v1).endVertex();
+                        buf.pos(x1, y2, 0D).tex(u1, v2).endVertex();
+                        buf.pos(x2, y2, 0D).tex(u2, v2).endVertex();
+                        buf.pos(x2, y1, 0D).tex(u2, v1).endVertex();
+                        tess.draw();
                     }
-                    buf.pos(x1, y1, 0D).tex(u1, v1).endVertex();
-                    buf.pos(x1, y2, 0D).tex(u1, v2).endVertex();
-                    buf.pos(x2, y2, 0D).tex(u2, v2).endVertex();
-                    buf.pos(x2, y1, 0D).tex(u2, v1).endVertex();
-                    tess.draw();
                 }
             }
         }
+        GlStateManager.color(1F, 1F, 1F, 1F);
 
         mouseRegions.render(mouseX, mouseY);
     }
