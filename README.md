@@ -50,6 +50,13 @@ It doesn't automatically export, so you'll need to use some external means of ex
 All tanks and item slots are accessible from any side of the device, so filtered pipes are recommended for separating the contents.
 If you end up with fluid in the buffer that you don't want, you can void the contents of the tanks from the GUI.
 
+### Precision Burette
+
+If, for some reason, you need to be able to encode a recipe using a weird amount of fluid, you can use the **Precision Burette**, a device that transfers fluids in configurable quantities.
+This device has an internal tank that holds 8 buckets of liquid and one slot of storage, where a fluid tank item can be placed.
+From the GUI, a specific quantity of fluid can be specified and transferred between the internal tank and the item.
+As with the ingredient buffer, excess fluid can be voided with a button in the GUI.
+
 ### Fluid Packets
 
 This mod being experimental, it is possible that fluid insertion might sometimes fail, leaving you with a weird item called a "fluid packet".
