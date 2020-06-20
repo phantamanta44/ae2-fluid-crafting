@@ -25,6 +25,11 @@ public class ContainerIngredientBuffer extends AEBaseContainer implements TankDu
     }
 
     @Override
+    public boolean canDumpTank(int index) {
+        return tile.getFluidInventory().getFluidInSlot(index) != null;
+    }
+
+    @Override
     public void dumpTank(int index) {
         if (index >= 0 && index < tile.getFluidInventory().getSlots()) {
             tile.getFluidInventory().setFluidInSlot(index, null);

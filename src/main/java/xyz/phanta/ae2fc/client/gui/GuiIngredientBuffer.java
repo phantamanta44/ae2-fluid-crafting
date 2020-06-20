@@ -1,33 +1,25 @@
 package xyz.phanta.ae2fc.client.gui;
 
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.core.localization.GuiText;
 import appeng.fluids.util.IAEFluidTank;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.client.gui.component.ButtonMouseHandler;
 import xyz.phanta.ae2fc.client.gui.component.MouseRegionManager;
+import xyz.phanta.ae2fc.client.gui.component.TankMouseHandler;
 import xyz.phanta.ae2fc.client.util.FluidRenderUtils;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerIngredientBuffer;
-import xyz.phanta.ae2fc.network.CPacketDumpTank;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiIngredientBuffer extends AEBaseGui {
 
@@ -43,8 +35,10 @@ public class GuiIngredientBuffer extends AEBaseGui {
         this.cont = (ContainerIngredientBuffer)inventorySlots;
         this.ySize = 222;
         for (int i = 0; i < 4; i++) {
-            mouseRegions.addRegion(TANK_X + TANK_X_OFF * i, TANK_Y, TANK_WIDTH, TANK_HEIGHT, new TankMouseHandler(i));
-            mouseRegions.addRegion(TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7, new DumpTankMouseHandler(i));
+            mouseRegions.addRegion(TANK_X + TANK_X_OFF * i, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
+                    new TankMouseHandler(cont.getTile().getFluidInventory(), i));
+            mouseRegions.addRegion(TANK_X + 10 + 22 * i, TANK_Y + TANK_HEIGHT + 2, 7, 7,
+                    ButtonMouseHandler.dumpTank(cont, i));
         }
     }
 
@@ -68,89 +62,16 @@ public class GuiIngredientBuffer extends AEBaseGui {
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         IAEFluidTank fluidInv = cont.getTile().getFluidInventory();
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         for (int i = 0; i < 4; i++) {
-            IAEFluidStack aeFluidStack = fluidInv.getFluidInSlot(i);
-            if (aeFluidStack != null) {
-                TextureAtlasSprite sprite = FluidRenderUtils.prepareRender(aeFluidStack.getFluidStack());
-                if (sprite != null) {
-                    GlStateManager.enableBlend();
-                    GlStateManager.blendFunc(
-                            GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                    int height = Math.round(TANK_HEIGHT * (float)Math.min(1D, Math.max(0D,
-                            aeFluidStack.getStackSize() / (double)fluidInv.getTankProperties()[i].getCapacity())));
-                    while (height > 0D) {
-                        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-                        double x1 = TANK_X + i * TANK_X_OFF, y1 = TANK_Y + TANK_HEIGHT - height;
-                        double x2 = x1 + TANK_WIDTH, y2 = y1 + Math.min(height, TANK_WIDTH);
-                        double u1 = sprite.getMinU(), v1 = sprite.getMinV(), u2 = sprite.getMaxU(), v2 = sprite.getMaxV();
-                        if (height < TANK_WIDTH) {
-                            v2 = v1 + (v2 - v1) * (height / (double)TANK_WIDTH);
-                            height = 0;
-                        } else {
-                            //noinspection SuspiciousNameCombination
-                            height -= TANK_WIDTH;
-                        }
-                        buf.pos(x1, y1, 0D).tex(u1, v1).endVertex();
-                        buf.pos(x1, y2, 0D).tex(u1, v2).endVertex();
-                        buf.pos(x2, y2, 0D).tex(u2, v2).endVertex();
-                        buf.pos(x2, y1, 0D).tex(u2, v1).endVertex();
-                        tess.draw();
-                    }
-                }
-            }
+            FluidRenderUtils.renderFluidIntoGui(tess, buf, TANK_X + i * TANK_X_OFF, TANK_Y, TANK_WIDTH, TANK_HEIGHT,
+                    fluidInv.getFluidInSlot(i), fluidInv.getTankProperties()[i].getCapacity());
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         mouseRegions.render(mouseX, mouseY);
-    }
-
-    private class TankMouseHandler implements MouseRegionManager.Handler {
-
-        private final int index;
-
-        TankMouseHandler(int index) {
-            this.index = index;
-        }
-
-        @Nullable
-        @Override
-        public List<String> getTooltip() {
-            IAEFluidStack fluid = cont.getTile().getFluidInventory().getFluidInSlot(index);
-            return fluid == null ? Collections.singletonList(I18n.format(NameConst.TT_EMPTY)) : Arrays.asList(
-                    fluid.getFluidStack().getLocalizedName(),
-                    TextFormatting.GRAY + String.format("%,d mB", fluid.getStackSize()));
-        }
-
-    }
-
-    private class DumpTankMouseHandler implements MouseRegionManager.Handler {
-
-        private final int index;
-
-        DumpTankMouseHandler(int index) {
-            this.index = index;
-        }
-
-        @Nullable
-        @Override
-        public List<String> getTooltip() {
-            return Collections.singletonList(I18n.format(NameConst.TT_DUMP_TANK));
-        }
-
-        @Override
-        public boolean onClick(int button) {
-            if (button == 0) {
-                if (cont.getTile().getFluidInventory().getFluidInSlot(index) != null) {
-                    Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketDumpTank(index));
-                }
-                return true;
-            }
-            return false;
-        }
-
     }
 
 }

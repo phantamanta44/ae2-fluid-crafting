@@ -5,9 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import xyz.phanta.ae2fc.client.gui.GuiBurette;
 import xyz.phanta.ae2fc.client.gui.GuiFluidPacketDecoder;
 import xyz.phanta.ae2fc.client.gui.GuiFluidPatternEncoder;
 import xyz.phanta.ae2fc.client.gui.GuiIngredientBuffer;
+import xyz.phanta.ae2fc.tile.TileBurette;
 import xyz.phanta.ae2fc.tile.TileFluidPacketDecoder;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
@@ -41,6 +43,13 @@ public class InventoryHandler implements IGuiHandler {
                 }
                 break;
             }
+            case 3: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileBurette) {
+                    return new ContainerBurette(player.inventory, (TileBurette)tile);
+                }
+                break;
+            }
         }
         return null;
     }
@@ -67,6 +76,13 @@ public class InventoryHandler implements IGuiHandler {
                 TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
                 if (tile instanceof TileIngredientBuffer) {
                     return new GuiIngredientBuffer(player.inventory, (TileIngredientBuffer)tile);
+                }
+                break;
+            }
+            case 3: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileBurette) {
+                    return new GuiBurette(player.inventory, (TileBurette)tile);
                 }
                 break;
             }
