@@ -70,6 +70,7 @@ public class GuiBurette extends AEBaseGui {
     @Override
     protected void mouseClicked(int xCoord, int yCoord, int btn) throws IOException {
         if (mouseRegions.onClick(xCoord, yCoord, btn)) {
+            amountField.mouseClicked(xCoord, yCoord, btn);
             super.mouseClicked(xCoord, yCoord, btn);
         }
     }
