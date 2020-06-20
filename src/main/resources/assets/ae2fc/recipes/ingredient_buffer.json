@@ -18,20 +18,20 @@
       "item": "appliedenergistics2:quartz_glass"
     },
     "l": {
-      "item": "appliedenergistics2:material",
-      "data": 54
+      "type": "appliedenergistics2:part",
+      "part": "material.cell1k_part"
     },
     "a": {
-      "item": "appliedenergistics2:material",
-      "data": 44
+      "type": "appliedenergistics2:part",
+      "part": "material.annihilation_core"
     },
     "f": {
-      "item": "appliedenergistics2:material",
-      "data": 43
+      "type": "appliedenergistics2:part",
+      "part": "material.formation_core"
     },
     "s": {
-      "item": "appliedenergistics2:material",
-      "data": 35
+      "type": "appliedenergistics2:part",
+      "part": "material.fluid_cell1k_part"
     }
   }
 }

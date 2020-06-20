@@ -15,19 +15,19 @@
       "ore": "ingotIron"
     },
     "p": {
-      "item": "appliedenergistics2:material",
-      "data": 24
+      "type": "appliedenergistics2:part",
+      "part": "material.engineering_processor"
     },
     "s": {
-      "item": "appliedenergistics2:part",
-      "data": 221
+      "type": "appliedenergistics2:part",
+      "part": "part.fluid_storage_bus"
     },
     "m": {
       "item": "appliedenergistics2:condenser"
     },
     "t": {
-      "item": "appliedenergistics2:part",
-      "data": 220
+      "type": "appliedenergistics2:part",
+      "part": "part.storage_bus"
     }
   }
 }

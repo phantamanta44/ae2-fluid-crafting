@@ -15,8 +15,8 @@
       "ore": "blockLapis"
     },
     "p": {
-      "item": "appliedenergistics2:material",
-      "data": 24
+      "type": "appliedenergistics2:part",
+      "part": "material.engineering_processor"
     },
     "i": {
       "type": "forge:ore_dict",
