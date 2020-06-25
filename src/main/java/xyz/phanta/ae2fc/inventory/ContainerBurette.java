@@ -30,7 +30,7 @@ public class ContainerBurette extends AEBaseContainer implements IFluidSyncConta
         super(ipl, tile);
         this.tile = tile;
         this.fluidSync = new FluidSyncHelper(tile.getFluidInventory(), 0);
-        addSlotToContainer(new SlotNormal(tile.getInternalInventory(), 0, 52, 54));
+        addSlotToContainer(new SlotNormal(tile.getInternalInventory(), 0, 52, 53));
         bindPlayerInventory(ipl, 0, 84);
     }
 
