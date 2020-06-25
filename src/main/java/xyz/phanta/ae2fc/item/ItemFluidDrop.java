@@ -4,7 +4,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.fluids.util.AEFluidStack;
 import appeng.util.item.AEItemStack;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
@@ -34,19 +34,22 @@ public class ItemFluidDrop extends Item {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         FluidStack fluid = getFluidStack(stack);
-        return I18n.format(getTranslationKey(stack) + ".name", fluid != null ? fluid.getLocalizedName() : "???");
+        // would like to use I18n::format instead of this deprecated function, but that only exists on the client :/
+        return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", fluid != null ? fluid.getLocalizedName() : "???");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flags) {
         FluidStack fluid = getFluidStack(stack);
         if (fluid != null) {
             tooltip.add(String.format(TextFormatting.GRAY + "%s, 1 mB", fluid.getLocalizedName()));
         } else {
-            tooltip.add(TextFormatting.RED + I18n.format(NameConst.TT_INVALID_FLUID));
+            tooltip.add(TextFormatting.RED + I18n.translateToLocal(NameConst.TT_INVALID_FLUID));
         }
     }
 
