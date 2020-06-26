@@ -1,8 +1,8 @@
 package xyz.phanta.ae2fc.handler;
 
+import appeng.block.AEBaseItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,7 +41,7 @@ public class RegistryHandler {
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
         // TODO some way to handle blocks with custom ItemBlock
         for (Pair<String, Block> entry : blocks) {
-            event.getRegistry().register(initItem(entry.getLeft(), new ItemBlock(entry.getRight())));
+            event.getRegistry().register(initItem(entry.getLeft(), new AEBaseItemBlock(entry.getRight())));
         }
         for (Pair<String, Item> entry : items) {
             event.getRegistry().register(initItem(entry.getLeft(), entry.getRight()));
