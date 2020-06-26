@@ -16,7 +16,7 @@ public class FcBlocks {
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_FLUID_PACKET_DECODER)
     public static BlockFluidPacketDecoder FLUID_PACKET_DECODER;
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_INGREDIENT_BUFFER)
-    public static BlockFluidPacketDecoder INGREDIENT_BUFFER;
+    public static BlockIngredientBuffer INGREDIENT_BUFFER;
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_BURETTE)
     public static BlockBurette BURETTE;
 
