@@ -14,7 +14,7 @@ import xyz.phanta.ae2fc.util.AeStackInventory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class CPacketLoadPattern implements IMessage {
 
     private IAEItemStack[] crafting, output;
