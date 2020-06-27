@@ -63,3 +63,8 @@ This mod being experimental, it is possible that fluid insertion might sometimes
 This item is used internally by AE2 Fluid Crafting to represent bundled quantities of fluid and is of absolutely no use otherwise.
 If you somehow manage to get your hands on one, you can use an **ME Fluid Packet Decoder** to convert them back into usable fluid.
 Simply connect the decoder to your ME network and insert the fluid packet; the decoder will, if possible, inject the fluid into your fluid storage grid.
+
+### Limitations
+
+* Some fluid crafting devices have more than nine input slots (e.g. the GTCE assembler).
+  AE2 Fluid Crafting cannot support recipes for these machines with more than nine inputs because vanilla AE2 doesn't allow more than nine inputs in an autocrafting recipe.

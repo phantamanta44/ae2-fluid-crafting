@@ -45,30 +45,26 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
                     if (ndxCrafting < crafting.length) {
                         ItemStack stack = ing.getDisplayedIngredient();
                         if (stack != null) {
-                            crafting[ndxCrafting] = AEItemStack.fromItemStack(stack);
+                            crafting[ndxCrafting++] = AEItemStack.fromItemStack(stack);
                         }
-                        ++ndxCrafting;
                     }
                 } else {
                     if (ndxOutput < output.length) {
                         ItemStack stack = ing.getDisplayedIngredient();
                         if (stack != null) {
-                            output[ndxOutput] = AEItemStack.fromItemStack(stack);
+                            output[ndxOutput++] = AEItemStack.fromItemStack(stack);
                         }
-                        ++ndxOutput;
                     }
                 }
             }
             for (IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
                 if (ing.isInput()) {
                     if (ndxCrafting < crafting.length) {
-                        crafting[ndxCrafting] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
-                        ++ndxCrafting;
+                        crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
                     }
                 } else {
                     if (ndxOutput < output.length) {
-                        output[ndxOutput] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
-                        ++ndxOutput;
+                        output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
                     }
                 }
             }
