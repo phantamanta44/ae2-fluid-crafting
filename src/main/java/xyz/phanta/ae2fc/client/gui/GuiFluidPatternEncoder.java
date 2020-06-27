@@ -1,22 +1,30 @@
 package xyz.phanta.ae2fc.client.gui;
 
+import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.client.gui.component.MouseRegionManager;
 import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
+import xyz.phanta.ae2fc.client.util.FluidRenderUtils;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
 import xyz.phanta.ae2fc.inventory.slot.SlotDense;
 import xyz.phanta.ae2fc.inventory.slot.SlotSingleItem;
+import xyz.phanta.ae2fc.item.ItemFluidDrop;
+import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.network.CPacketEncodePattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,12 +80,33 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     @Override
     public void drawSlot(Slot slot) {
         if (slot instanceof SlotDense) {
+            IAEItemStack stack = ((SlotDense)slot).getAeStack();
+            if (stack != null && stack.getItem() instanceof ItemFluidPacket) {
+                FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
+                if (fluid != null && fluid.amount > 0) {
+                    FluidRenderUtils.renderFluidIntoGuiCleanly(slot.xPos, slot.yPos, 16, 16, fluid, fluid.amount);
+                    Ae2ReflectClient.getStackSizeRenderer(this)
+                            .renderStackSize(fontRenderer, ItemFluidDrop.newAeStack(fluid), slot.xPos, slot.yPos);
+                    return;
+                }
+            }
             super.drawSlot(new SlotSingleItem(slot));
             Ae2ReflectClient.getStackSizeRenderer(this)
-                    .renderStackSize(fontRenderer, ((SlotDense)slot).getAeStack(), slot.xPos, slot.yPos);
+                    .renderStackSize(fontRenderer, stack, slot.xPos, slot.yPos);
         } else {
             super.drawSlot(slot);
         }
+    }
+
+    @Override
+    public List<String> getItemToolTip(ItemStack stack) {
+        if (stack.getItem() instanceof ItemFluidPacket) {
+            FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
+            if (fluid != null) {
+                return Arrays.asList(fluid.getLocalizedName(), String.format(TextFormatting.GRAY + "%,d mB", fluid.amount));
+            }
+        }
+        return super.getItemToolTip(stack);
     }
 
 }

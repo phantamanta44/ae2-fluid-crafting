@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
-import xyz.phanta.ae2fc.item.ItemFluidDrop;
+import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.network.CPacketLoadPattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 
@@ -62,12 +62,12 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
             for (IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
                 if (ing.isInput()) {
                     if (ndxCrafting < crafting.length) {
-                        crafting[ndxCrafting] = ItemFluidDrop.newAeStack(ing.getDisplayedIngredient());
+                        crafting[ndxCrafting] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
                         ++ndxCrafting;
                     }
                 } else {
                     if (ndxOutput < output.length) {
-                        output[ndxOutput] = ItemFluidDrop.newAeStack(ing.getDisplayedIngredient());
+                        output[ndxOutput] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
                         ++ndxOutput;
                     }
                 }

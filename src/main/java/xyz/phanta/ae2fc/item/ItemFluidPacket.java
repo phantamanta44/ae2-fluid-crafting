@@ -1,5 +1,7 @@
 package xyz.phanta.ae2fc.item;
 
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEItemStack;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -48,11 +50,16 @@ public class ItemFluidPacket extends Item {
 
     @Nullable
     public static FluidStack getFluidStack(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
+        if (stack.isEmpty() || !stack.hasTagCompound()) {
             return null;
         }
         FluidStack fluid = FluidStack.loadFluidStackFromNBT(Objects.requireNonNull(stack.getTagCompound()).getCompoundTag("FluidStack"));
         return (fluid != null && fluid.amount > 0) ? fluid : null;
+    }
+
+    @Nullable
+    public static FluidStack getFluidStack(@Nullable IAEItemStack stack) {
+        return stack != null ? getFluidStack(stack.getDefinition()) : null;
     }
 
     public static ItemStack newStack(@Nullable FluidStack fluid) {
@@ -66,6 +73,11 @@ public class ItemFluidPacket extends Item {
         tag.setTag("FluidStack", fluidTag);
         stack.setTagCompound(tag);
         return stack;
+    }
+
+    @Nullable
+    public static IAEItemStack newAeStack(@Nullable FluidStack fluid) {
+        return AEItemStack.fromItemStack(newStack(fluid));
     }
 
 }

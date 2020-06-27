@@ -18,6 +18,7 @@ import xyz.phanta.ae2fc.init.FcItems;
 import xyz.phanta.ae2fc.inventory.slot.SlotDense;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
+import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 import xyz.phanta.ae2fc.util.AeItemStackHandler;
 import xyz.phanta.ae2fc.util.AeStackInventory;
@@ -99,6 +100,13 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer {
         List<IAEItemStack> acc = new ArrayList<>();
         for (IAEItemStack stack : inv) {
             if (stack != null) {
+                if (stack.getItem() instanceof ItemFluidPacket) {
+                    IAEItemStack dropStack = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(stack));
+                    if (dropStack != null) {
+                        acc.add(dropStack);
+                        continue;
+                    }
+                }
                 acc.add(stack);
             }
         }
@@ -173,7 +181,7 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer {
                         stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
                         .getTankProperties();
                 for (IFluidTankProperties tank : tanks) {
-                    IAEItemStack aeStack = ItemFluidDrop.newAeStack(tank.getContents());
+                    IAEItemStack aeStack = ItemFluidPacket.newAeStack(tank.getContents());
                     if (aeStack != null) {
                         setAeStack(aeStack, false);
                         return;
