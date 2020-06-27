@@ -1,4 +1,4 @@
-package xyz.phanta.ae2fc.inventory;
+package xyz.phanta.ae2fc.inventory.slot;
 
 import appeng.api.storage.data.IAEItemStack;
 
@@ -8,5 +8,7 @@ public interface SlotDense {
 
     @Nullable
     IAEItemStack getAeStack();
+
+    void setAeStack(@Nullable IAEItemStack stack, boolean sync);
 
 }

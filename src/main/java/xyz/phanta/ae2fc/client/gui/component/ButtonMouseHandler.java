@@ -3,7 +3,7 @@ package xyz.phanta.ae2fc.client.gui.component;
 import net.minecraft.client.resources.I18n;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.constant.NameConst;
-import xyz.phanta.ae2fc.inventory.TankDumpable;
+import xyz.phanta.ae2fc.inventory.base.TankDumpable;
 import xyz.phanta.ae2fc.network.CPacketDumpTank;
 
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package xyz.phanta.ae2fc.inventory;
+package xyz.phanta.ae2fc.inventory.slot;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;

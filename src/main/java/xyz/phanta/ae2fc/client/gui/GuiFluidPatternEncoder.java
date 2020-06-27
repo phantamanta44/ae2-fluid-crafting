@@ -11,8 +11,8 @@ import xyz.phanta.ae2fc.client.gui.component.MouseRegionManager;
 import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
-import xyz.phanta.ae2fc.inventory.SlotDense;
-import xyz.phanta.ae2fc.inventory.SlotSingleItem;
+import xyz.phanta.ae2fc.inventory.slot.SlotDense;
+import xyz.phanta.ae2fc.inventory.slot.SlotSingleItem;
 import xyz.phanta.ae2fc.network.CPacketEncodePattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 

@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import xyz.phanta.ae2fc.inventory.base.TankDumpable;
 import xyz.phanta.ae2fc.tile.TileBurette;
 
 import java.util.Collections;

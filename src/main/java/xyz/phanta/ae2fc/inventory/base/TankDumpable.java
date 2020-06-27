@@ -1,4 +1,4 @@
-package xyz.phanta.ae2fc.inventory;
+package xyz.phanta.ae2fc.inventory.base;
 
 public interface TankDumpable {
 

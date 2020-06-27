@@ -4,6 +4,7 @@ import appeng.container.AEBaseContainer;
 import appeng.container.slot.SlotNormal;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.items.IItemHandler;
+import xyz.phanta.ae2fc.inventory.base.TankDumpable;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
 
 public class ContainerIngredientBuffer extends AEBaseContainer implements TankDumpable {

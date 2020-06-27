@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.ItemHandlerHelper;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.inventory.slot.SlotDense;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
@@ -158,9 +159,14 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer {
             inv.setStack(getSlotIndex(), AEItemStack.fromItemStack(stack));
         }
 
+        @Override
+        public void setAeStack(@Nullable IAEItemStack stack, boolean sync) {
+            inv.setStack(getSlotIndex(), stack);
+        }
+
         public void putConvertedStack(ItemStack stack) {
             if (stack.isEmpty()) {
-                inv.setStack(getSlotIndex(), null);
+                setAeStack(null, false);
                 return;
             } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
                 IFluidTankProperties[] tanks = Objects.requireNonNull(
@@ -169,12 +175,12 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer {
                 for (IFluidTankProperties tank : tanks) {
                     IAEItemStack aeStack = ItemFluidDrop.newAeStack(tank.getContents());
                     if (aeStack != null) {
-                        inv.setStack(getSlotIndex(), aeStack);
+                        setAeStack(aeStack, false);
                         return;
                     }
                 }
             }
-            inv.setStack(getSlotIndex(), AEItemStack.fromItemStack(stack));
+            putStack(stack);
         }
 
         @Nullable
