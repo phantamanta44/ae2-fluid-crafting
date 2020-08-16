@@ -10,7 +10,6 @@ import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class FcItems {
 
     public static final CreativeTabs TAB_AE2FC = new CreativeTabs(Ae2FluidCrafting.MOD_ID) {

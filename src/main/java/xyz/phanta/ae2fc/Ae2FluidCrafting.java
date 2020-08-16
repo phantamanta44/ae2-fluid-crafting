@@ -12,13 +12,11 @@ import org.apache.logging.log4j.Logger;
 public class Ae2FluidCrafting {
 
     public static final String MOD_ID = "ae2fc";
-    public static final String VERSION = "1.0.7";
+    public static final String VERSION = "1.0.8";
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
     @Mod.Instance(MOD_ID)
     public static Ae2FluidCrafting INSTANCE;
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
     @SidedProxy(
             clientSide = "xyz.phanta.ae2fc.client.ClientProxy",
             serverSide = "xyz.phanta.ae2fc.CommonProxy")

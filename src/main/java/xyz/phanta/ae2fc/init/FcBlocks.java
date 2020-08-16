@@ -6,7 +6,6 @@ import xyz.phanta.ae2fc.block.*;
 import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.handler.RegistryHandler;
 
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class FcBlocks {
 
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_FLUID_DISCRETIZER)
