@@ -1,11 +1,20 @@
 package xyz.phanta.ae2fc;
 
+import appeng.api.AEApi;
+import appeng.api.definitions.IItemDefinition;
+import appeng.core.AppEng;
+import appeng.core.features.ItemDefinition;
+import appeng.recipes.game.DisassembleRecipe;
+import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import xyz.phanta.ae2fc.constant.NameConst;
@@ -18,6 +27,9 @@ import xyz.phanta.ae2fc.network.CPacketEncodePattern;
 import xyz.phanta.ae2fc.network.CPacketLoadPattern;
 import xyz.phanta.ae2fc.network.CPacketTransposeFluid;
 import xyz.phanta.ae2fc.tile.*;
+import xyz.phanta.ae2fc.util.Ae2Reflect;
+
+import java.util.Objects;
 
 public class CommonProxy {
 
@@ -44,7 +56,16 @@ public class CommonProxy {
     }
 
     public void onInit(FMLInitializationEvent event) {
-        // NO-OP
+        IRecipe disassembleRecipe = ForgeRegistries.RECIPES.getValue(new ResourceLocation(AppEng.MOD_ID, "disassemble"));
+        if (disassembleRecipe instanceof DisassembleRecipe) {
+            Ae2Reflect.getDisassemblyNonCellMap((DisassembleRecipe)disassembleRecipe).put(
+                    createItemDefn(FcItems.DENSE_ENCODED_PATTERN),
+                    AEApi.instance().definitions().materials().blankPattern());
+        }
+    }
+
+    private static IItemDefinition createItemDefn(Item item) {
+        return new ItemDefinition(Objects.requireNonNull(item.getRegistryName()).toString(), item);
     }
 
     public void onPostInit(FMLPostInitializationEvent event) {
