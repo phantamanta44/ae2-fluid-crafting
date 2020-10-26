@@ -49,6 +49,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileFluidPacketDecoder.class, Ae2FluidCrafting.resource(NameConst.BLOCK_FLUID_PACKET_DECODER));
         GameRegistry.registerTileEntity(TileIngredientBuffer.class, Ae2FluidCrafting.resource(NameConst.BLOCK_INGREDIENT_BUFFER));
         GameRegistry.registerTileEntity(TileBurette.class, Ae2FluidCrafting.resource(NameConst.BLOCK_BURETTE));
+        GameRegistry.registerTileEntity(TileDualInterface.class, Ae2FluidCrafting.resource(NameConst.BlOCK_DUAL_INTERFACE));
         netHandler.registerMessage(new CPacketEncodePattern.Handler(), CPacketEncodePattern.class, 0, Side.SERVER);
         netHandler.registerMessage(new CPacketLoadPattern.Handler(), CPacketLoadPattern.class, 1, Side.SERVER);
         netHandler.registerMessage(new CPacketDumpTank.Handler(), CPacketDumpTank.class, 2, Side.SERVER);

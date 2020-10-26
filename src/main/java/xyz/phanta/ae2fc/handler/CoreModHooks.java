@@ -1,6 +1,13 @@
 package xyz.phanta.ae2fc.handler;
 
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridHost;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IMachineSet;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.me.MachineSet;
+import appeng.parts.misc.PartInterface;
+import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.tileentity.TileEntity;
@@ -10,10 +17,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import xyz.phanta.ae2fc.init.FcItems;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
+import xyz.phanta.ae2fc.parts.PartDualInterface;
+import xyz.phanta.ae2fc.tile.TileDualInterface;
 import xyz.phanta.ae2fc.util.FluidConvertingInventoryAdaptor;
 import xyz.phanta.ae2fc.util.FluidConvertingInventoryCrafting;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class CoreModHooks {
@@ -52,4 +62,18 @@ public class CoreModHooks {
                 ? (long)Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
     }
 
+    public static IMachineSet getMachines(IGrid grid, Class<? extends IGridHost> c){
+        if (c == TileInterface.class){
+            HashSet m1 = (HashSet) grid.getMachines(c);
+            HashSet m2 = (HashSet) grid.getMachines(TileDualInterface.class);
+            m1.addAll(m2);
+            return (IMachineSet)m1;
+        } else if (c == PartInterface.class){
+            HashSet m1 = (HashSet) grid.getMachines(c);
+            HashSet m2 = (HashSet) grid.getMachines(PartDualInterface.class);
+            m1.addAll(m2);
+            return (IMachineSet)m1;
+        }
+        return grid.getMachines(c);
+    }
 }

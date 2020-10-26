@@ -5,6 +5,7 @@ tile.ae2fc:fluid_pattern_encoder.name=Fluid Pattern Encoder
 tile.ae2fc:fluid_packet_decoder.name=ME Fluid Packet Decoder
 tile.ae2fc:ingredient_buffer.name=Ingredient Buffer
 tile.ae2fc:burette.name=Precision Burette
+tile.ae2fc:dual_interface.name=Dual Interface
 
 item.ae2fc:fluid_drop.name=Drop of %s
 item.ae2fc:fluid_packet.name=Fluid Packet (%s)

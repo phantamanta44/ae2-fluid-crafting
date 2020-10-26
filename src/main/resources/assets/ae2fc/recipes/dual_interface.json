@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "appliedenergistics2:interface"
+    },
+    {
+      "type": "appliedenergistics2:fluid_interface"
+    }
+  ],
+  "result": {
+    "item": "ae2fc:dual_interface",
+    "nbt": {}
+  }
+}
