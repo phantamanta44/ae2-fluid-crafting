@@ -6,10 +6,12 @@ tile.ae2fc:fluid_packet_decoder.name=ME Fluid Packet Decoder
 tile.ae2fc:ingredient_buffer.name=Ingredient Buffer
 tile.ae2fc:burette.name=Precision Burette
 tile.ae2fc:dual_interface.name=Dual Interface
+tile.ae2fc:part_dual_interface.name=Part Dual Interface
 
 item.ae2fc:fluid_drop.name=Drop of %s
 item.ae2fc:fluid_packet.name=Fluid Packet (%s)
 item.ae2fc:dense_encoded_pattern.name=Encoded Pattern
+item.ae2fc:part_dual_interface.name=Part Dual Interface
 
 ae2fc.gui.fluid_pattern_encoder=Fluid Pattern Encoder
 ae2fc.gui.fluid_packet_decoder=ME Fluid Packet Decoder

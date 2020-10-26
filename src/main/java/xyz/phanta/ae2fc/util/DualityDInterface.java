@@ -88,12 +88,12 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
             return TickRateModulation.SLEEP;
         }
         if (this.hasItemsToSend()) {
-            this.pushItemsOut(iHost.getTargets());
-//            try {
-//                ReflectionHelper.findMethod(DualityInterface.class, "pushItemsOut", null).invoke(this, iHost.getTargets());
-//            } catch (IllegalAccessException | InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
+//            this.pushItemsOut(iHost.getTargets());
+            try {
+                ReflectionHelper.findMethod(DualityInterface.class, "pushItemsOut", null).invoke(this, iHost.getTargets());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
         boolean pushedFluid = false;
         if (this.hasFluid()) {
@@ -106,45 +106,6 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
             e.printStackTrace();
         }
         return TickRateModulation.SLEEP;
-    }
-
-    private void pushItemsOut(final EnumSet<EnumFacing> possibleDirections) {
-        if (!this.hasItemsToSend()) {
-            return;
-        }
-        IInterfaceHost iHost = getPrivateValue("iHost");
-        List<ItemStack> waitingToSend = getPrivateValue("waitingToSend");
-        final TileEntity tile = iHost.getTileEntity();
-        final World w = tile.getWorld();
-        final Iterator<ItemStack> i = waitingToSend.iterator();
-        while (i.hasNext()) {
-            ItemStack whatToSend = i.next();
-
-            for (final EnumFacing s : possibleDirections) {
-                final TileEntity te = w.getTileEntity(tile.getPos().offset(s));
-                if (te == null) {
-                    continue;
-                }
-                final InventoryAdaptor ad = CoreModHooks.wrapInventory(te, s.getOpposite());
-                if (ad != null) {
-                    final ItemStack result = ad.addItems(whatToSend);
-                    if (result.isEmpty()) {
-                        whatToSend = ItemStack.EMPTY;
-                    } else {
-                        whatToSend.setCount(whatToSend.getCount() - (whatToSend.getCount() - result.getCount()));
-                    }
-                    if (whatToSend.isEmpty()) {
-                        break;
-                    }
-                }
-            }
-            if (whatToSend.isEmpty()) {
-                i.remove();
-            }
-        }
-        if (waitingToSend.isEmpty()) {
-            setPrivateValue(null, "waitingToSend");
-        }
     }
 
     public boolean pushFluidOut() {
@@ -229,9 +190,9 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
     }
 
     public void setPlacer(EntityPlayer player) {
-        AENetworkProxy gridProxy = getPrivateValue("gridProxy");
-        if (gridProxy != null) {
-            gridProxy.setOwner(player);
-        }
+//        AENetworkProxy gridProxy = getPrivateValue("gridProxy");
+//        if (gridProxy != null) {
+//            gridProxy.setOwner(player);
+//        }
     }
 }
