@@ -18,26 +18,16 @@ import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
-import appeng.util.InventoryAdaptor;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import xyz.phanta.ae2fc.handler.CoreModHooks;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
 
 public class DualityDInterface extends DualityInterface implements IAEFluidInventory {
     private final AEFluidInventory tanks = new AEFluidInventory(this, 1, Fluid.BUCKET_VOLUME * 64);
@@ -88,7 +78,6 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
             return TickRateModulation.SLEEP;
         }
         if (this.hasItemsToSend()) {
-//            this.pushItemsOut(iHost.getTargets());
             try {
                 ReflectionHelper.findMethod(DualityInterface.class, "pushItemsOut", null).invoke(this, iHost.getTargets());
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -113,7 +102,6 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
         if (this.hasFluid()) {
             try {
                 IAEFluidStack aeFluidStack = this.tanks.getFluidInSlot(0);
-                Fluid aeFluidStackFluid = aeFluidStack.getFluid();
                 AENetworkProxy gridProxy = getPrivateValue("gridProxy");
                 IMEInventory<IAEFluidStack> dest = gridProxy.getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
                 IActionSource src = getPrivateValue("interfaceRequestSource");
@@ -187,12 +175,5 @@ public class DualityDInterface extends DualityInterface implements IAEFluidInven
         } catch (GridAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setPlacer(EntityPlayer player) {
-//        AENetworkProxy gridProxy = getPrivateValue("gridProxy");
-//        if (gridProxy != null) {
-//            gridProxy.setOwner(player);
-//        }
     }
 }
