@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -21,6 +22,7 @@ import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.handler.RegistryHandler;
 import xyz.phanta.ae2fc.init.FcBlocks;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.integration.pauto.PackagedFluidCrafting;
 import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.network.CPacketDumpTank;
 import xyz.phanta.ae2fc.network.CPacketEncodePattern;
@@ -53,6 +55,9 @@ public class CommonProxy {
         netHandler.registerMessage(new CPacketLoadPattern.Handler(), CPacketLoadPattern.class, 1, Side.SERVER);
         netHandler.registerMessage(new CPacketDumpTank.Handler(), CPacketDumpTank.class, 2, Side.SERVER);
         netHandler.registerMessage(new CPacketTransposeFluid.Handler(), CPacketTransposeFluid.class, 3, Side.SERVER);
+        if (Loader.isModLoaded("packagedauto")) {
+            PackagedFluidCrafting.init();
+        }
     }
 
     public void onInit(FMLInitializationEvent event) {

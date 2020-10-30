@@ -6,17 +6,33 @@ import appeng.util.inv.AdaptorItemHandler;
 import appeng.util.inv.IInventoryDestination;
 import appeng.util.inv.ItemSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class FluidConvertingInventoryAdaptor extends InventoryAdaptor {
+
+    public static FluidConvertingInventoryAdaptor wrap(ICapabilityProvider capProvider, EnumFacing face) {
+        // sometimes i wish i had the monadic version from 1.15
+        return new FluidConvertingInventoryAdaptor(
+                capProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face)
+                        ? Objects.requireNonNull(capProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face))
+                        : null,
+                capProvider.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face)
+                        ? Objects.requireNonNull(capProvider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face))
+                        : null);
+    }
 
     @Nullable
     private final InventoryAdaptor invItems;
