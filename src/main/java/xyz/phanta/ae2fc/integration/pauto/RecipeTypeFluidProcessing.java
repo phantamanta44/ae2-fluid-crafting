@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import thelm.packagedauto.api.IRecipeInfo;
 import thelm.packagedauto.api.IRecipeType;
 import thelm.packagedauto.integration.jei.PackagedAutoJEIPlugin;
-import thelm.packagedauto.recipe.RecipeInfoProcessing;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.init.FcBlocks;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
@@ -61,7 +60,7 @@ public class RecipeTypeFluidProcessing implements IRecipeType {
 
     @Override
     public IRecipeInfo getNewRecipeInfo() {
-        return new RecipeInfoProcessing();
+        return new RecipeInfoFluidProcessing();
     }
 
     @Override
