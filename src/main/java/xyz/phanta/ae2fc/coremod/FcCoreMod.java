@@ -15,7 +15,8 @@ public class FcCoreMod implements IFMLLoadingPlugin {
                 pkgName + "DualityInterfaceTransformer",
                 pkgName + "CraftingTreeNodeTransformer",
                 pkgName + "TileUnpackagerTransformer",
-                pkgName + "PackageCraftingPatternHelperTransformer"
+                pkgName + "PackageCraftingPatternHelperTransformer",
+                pkgName + "RecipeCraftingPatternHelperTransformer"
         };
     }
 
