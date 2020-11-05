@@ -3,11 +3,12 @@ package xyz.phanta.ae2fc.handler;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.InventoryAdaptor;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.init.FcItems;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
@@ -42,6 +43,11 @@ public class CoreModHooks {
     public static long getCraftingByteCost(IAEItemStack stack) {
         return stack.getItem() instanceof ItemFluidDrop
                 ? (long)Math.ceil(stack.getStackSize() / 1000D) : stack.getStackSize();
+    }
+
+    public static boolean checkForItemHandler(ICapabilityProvider capProvider, Capability<?> capability, EnumFacing side) {
+        return capProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)
+                || capProvider.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
     }
 
     public static IItemHandler wrapItemHandler(ICapabilityProvider capProvider, Capability<?> capability, EnumFacing side) {

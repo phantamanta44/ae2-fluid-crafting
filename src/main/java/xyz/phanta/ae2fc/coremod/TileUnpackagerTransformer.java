@@ -51,12 +51,28 @@ public class TileUnpackagerTransformer implements IClassTransformer {
 
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-            if (opcode == Opcodes.INVOKEVIRTUAL && gettingItemHandlerCap && name.equals("getCapability")
-                    && desc.equals("(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Ljava/lang/Object;")) {
-                super.visitMethodInsn(Opcodes.INVOKESTATIC, "xyz/phanta/ae2fc/handler/CoreModHooks", "wrapItemHandler",
-                        "(Lnet/minecraftforge/common/capabilities/ICapabilityProvider;Lnet/minecraftforge/common/capabilities/Capability;" +
-                                "Lnet/minecraft/util/EnumFacing;)Lnet/minecraftforge/items/IItemHandler;", false);
-                gettingItemHandlerCap = false;
+            if (opcode == Opcodes.INVOKEVIRTUAL && gettingItemHandlerCap) {
+                switch (name) {
+                    case "hasCapability":
+                        if (desc.equals("(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Z")) {
+                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "xyz/phanta/ae2fc/handler/CoreModHooks", "checkForItemHandler",
+                                    "(Lnet/minecraftforge/common/capabilities/ICapabilityProvider;Lnet/minecraftforge/common/capabilities/Capability;" +
+                                            "Lnet/minecraft/util/EnumFacing;)Z", false);
+                            gettingItemHandlerCap = false;
+                        }
+                        break;
+                    case "getCapability":
+                        if (desc.equals("(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/util/EnumFacing;)Ljava/lang/Object;")) {
+                            super.visitMethodInsn(Opcodes.INVOKESTATIC, "xyz/phanta/ae2fc/handler/CoreModHooks", "wrapItemHandler",
+                                    "(Lnet/minecraftforge/common/capabilities/ICapabilityProvider;Lnet/minecraftforge/common/capabilities/Capability;" +
+                                            "Lnet/minecraft/util/EnumFacing;)Lnet/minecraftforge/items/IItemHandler;", false);
+                            gettingItemHandlerCap = false;
+                        }
+                        break;
+                    default:
+                        super.visitMethodInsn(opcode, owner, name, desc, itf);
+                        break;
+                }
             } else {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }

@@ -76,8 +76,13 @@ public class FluidConvertingItemHandler implements IItemHandler {
                         if (toInsert != null && toInsert.amount > 0) {
                             FluidStack contained = fh.getTankProperties()[i].getContents();
                             if (contained == null || contained.amount == 0 || contained.isFluidEqual(toInsert)) {
-                                toInsert.amount -= fh.fill(toInsert, !simulate);
-                                return ItemFluidPacket.newStack(toInsert);
+                                int insertable = fh.fill(toInsert, false); // only insert if the entire packet fits
+                                if (insertable >= toInsert.amount) {
+                                    if (!simulate) {
+                                        fh.fill(toInsert, true);
+                                    }
+                                    return ItemStack.EMPTY;
+                                }
                             }
                         }
                     }
@@ -124,7 +129,7 @@ public class FluidConvertingItemHandler implements IItemHandler {
                 }
             }
         }
-        throw new IndexOutOfBoundsException(String.format("Slot %d out of bounds! |items| = %d, |fluids| + %d", slot,
+        throw new IndexOutOfBoundsException(String.format("Slot index %d out of bounds! |items| = %d, |fluids| = %d", slot,
                 invItems != null ? invItems.getSlots() : 0, invFluids != null ? invFluids.getTankProperties().length : 0));
     }
 
