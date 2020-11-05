@@ -25,3 +25,6 @@ ae2fc.tooltip.empty=Empty
 ae2fc.tooltip.dump_tank=Dump Tank Contents
 ae2fc.tooltip.transpose_in=Transfer Into Tank
 ae2fc.tooltip.transpose_out=Transfer Into Item
+
+ae2fc.pauto.fluid_processing.name=Fluid Processing
+ae2fc.pauto.fluid_processing.name_short=Fluid

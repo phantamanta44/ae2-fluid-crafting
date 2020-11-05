@@ -2,16 +2,18 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "com.wynprice.cursemaven:CurseMaven:2.1.4"
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: "com.wynprice.cursemaven"
 
-version = "1.0.8"
+version = "1.0.9"
 group = "xyz.phanta.ae2fc"
 archivesBaseName = "ae2fc-1.12.2"
 
@@ -36,6 +38,7 @@ dependencies {
     compile 'com.github.phantamanta44:jsr305:1.0.1'
     deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
     deobfCompile 'appeng:appliedenergistics2:rv6-stable-7'
+    deobfCompile "curse.maven:PackagedAuto:2977147" // 1.0.3.14
 }
 
 jar {

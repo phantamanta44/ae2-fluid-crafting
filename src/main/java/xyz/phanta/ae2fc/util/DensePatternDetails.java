@@ -166,7 +166,7 @@ public class DensePatternDetails implements ICraftingPatternDetails, Comparable<
         return patternStack;
     }
 
-    private static NBTTagList writeStackArray(IAEItemStack[] stacks) {
+    public static NBTTagList writeStackArray(IAEItemStack[] stacks) {
         NBTTagList listTag = new NBTTagList();
         for (IAEItemStack stack : stacks) {
             if (stack != null) {
@@ -190,7 +190,7 @@ public class DensePatternDetails implements ICraftingPatternDetails, Comparable<
                 && setOutputs(readStackArray(tag.getTagList("Outputs", Constants.NBT.TAG_COMPOUND), 3));
     }
 
-    private static IAEItemStack[] readStackArray(NBTTagList listTag, int maxCount) {
+    public static IAEItemStack[] readStackArray(NBTTagList listTag, int maxCount) {
         // see note at top of class
         IAEItemStack[] stacks = new IAEItemStack[Math.min(listTag.tagCount(), maxCount)];
         for (int i = 0; i < stacks.length; i++) {
