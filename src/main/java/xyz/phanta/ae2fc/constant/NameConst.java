@@ -16,6 +16,7 @@ public class NameConst {
     public static final String ITEM_DENSE_ENCODED_PATTERN = "dense_encoded_pattern";
 
     public static final String TT_KEY = Ae2FluidCrafting.MOD_ID + ".tooltip.";
+    public static final String TT_FLUID_PACKET = TT_KEY + "fluid_packet";
     public static final String TT_INVALID_FLUID = TT_KEY + "invalid_fluid";
     public static final String TT_PROCESSING_RECIPE_ONLY = TT_KEY + "processing_recipe_only";
     public static final String TT_ENCODE_PATTERN = TT_KEY + "encode_pattern";
@@ -31,5 +32,6 @@ public class NameConst {
     public static final String GUI_BURETTE = GUI_KEY + BLOCK_BURETTE;
 
     public static final ResourceLocation MODEL_DENSE_ENCODED_PATTERN = Ae2FluidCrafting.resource("builtin/dense_encoded_pattern");
+    public static final ResourceLocation MODEL_FLUID_PACKET = Ae2FluidCrafting.resource("builtin/fluid_packet");
 
 }

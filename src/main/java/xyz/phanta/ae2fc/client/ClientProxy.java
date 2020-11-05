@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy {
                 return -1;
             }
             FluidStack fluid = ItemFluidPacket.getFluidStack(s);
-            return fluid != null ? dropColourHandler.getColour(fluid) : -1;
+            return fluid != null ? fluid.getFluid().getColor(fluid) : -1;
         }, FcItems.FLUID_PACKET);
     }
 
