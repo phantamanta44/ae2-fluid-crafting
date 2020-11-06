@@ -9,6 +9,7 @@ import xyz.phanta.ae2fc.handler.RegistryHandler;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
+import xyz.phanta.ae2fc.item.ItemPartDualInterface;
 
 public class FcItems {
 
@@ -25,11 +26,14 @@ public class FcItems {
     public static ItemFluidPacket FLUID_PACKET;
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.ITEM_DENSE_ENCODED_PATTERN)
     public static ItemDenseEncodedPattern DENSE_ENCODED_PATTERN;
+    @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.ITEM_PART_DUAL_INTERFACE)
+    public static ItemPartDualInterface PART_DUAL_INTERFACE;
 
     public static void init(RegistryHandler regHandler) {
         regHandler.item(NameConst.ITEM_FLUID_DROP, new ItemFluidDrop());
         regHandler.item(NameConst.ITEM_FLUID_PACKET, new ItemFluidPacket());
         regHandler.item(NameConst.ITEM_DENSE_ENCODED_PATTERN, new ItemDenseEncodedPattern());
+        regHandler.item(NameConst.ITEM_PART_DUAL_INTERFACE, new ItemPartDualInterface());
     }
 
 }
