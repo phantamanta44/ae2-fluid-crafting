@@ -58,7 +58,7 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
         this.item_duality.notifyNeighbors();
-        this.fluid_duality.gridChanged();
+        this.fluid_duality.notifyNeighbors();
     }
 
     @MENetworkEventSubscribe
