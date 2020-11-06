@@ -1,20 +1,22 @@
-package xyz.phanta.ae2fc.coremod;
+package xyz.phanta.ae2fc.coremod.transform;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import xyz.phanta.ae2fc.coremod.FcClassTransformer;
 
-public class CraftingCpuTransformer implements IClassTransformer {
+public class CraftingCpuTransformer extends FcClassTransformer.ClassMapper {
+
+    public static final CraftingCpuTransformer INSTANCE = new CraftingCpuTransformer();
+
+    private CraftingCpuTransformer() {
+        // NO-OP
+    }
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] code) {
-        if (transformedName.equals("appeng.me.cluster.implementations.CraftingCPUCluster")) {
-            System.out.println("[ae2fc] Transforming CraftingCPUCluster...");
-            ClassReader reader = new ClassReader(code);
-            ClassWriter writer = new ClassWriter(reader, 0);
-            reader.accept(new TransformCraftingCPUCluster(Opcodes.ASM5, writer), 0);
-            return writer.toByteArray();
-        }
-        return code;
+    protected ClassVisitor getClassMapper(ClassVisitor downstream) {
+        return new TransformCraftingCPUCluster(Opcodes.ASM5, downstream);
     }
 
     private static class TransformCraftingCPUCluster extends ClassVisitor {

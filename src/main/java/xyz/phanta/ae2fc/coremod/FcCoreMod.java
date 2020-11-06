@@ -9,15 +9,7 @@ public class FcCoreMod implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        String pkgName = FcCoreMod.class.getPackage().getName() + ".";
-        return new String[] {
-                pkgName + "CraftingCpuTransformer",
-                pkgName + "DualityInterfaceTransformer",
-                pkgName + "CraftingTreeNodeTransformer",
-                pkgName + "TileUnpackagerTransformer",
-                pkgName + "PackageCraftingPatternHelperTransformer",
-                pkgName + "RecipeCraftingPatternHelperTransformer"
-        };
+        return new String[] { FcCoreMod.class.getPackage().getName() + ".FcClassTransformer" };
     }
 
     @Nullable

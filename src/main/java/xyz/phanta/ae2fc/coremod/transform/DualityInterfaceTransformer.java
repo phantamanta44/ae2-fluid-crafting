@@ -1,20 +1,21 @@
-package xyz.phanta.ae2fc.coremod;
+package xyz.phanta.ae2fc.coremod.transform;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import xyz.phanta.ae2fc.coremod.FcClassTransformer;
 
-public class DualityInterfaceTransformer implements IClassTransformer {
+public class DualityInterfaceTransformer extends FcClassTransformer.ClassMapper {
+
+    public static final DualityInterfaceTransformer INSTANCE = new DualityInterfaceTransformer();
+
+    private DualityInterfaceTransformer() {
+        // NO-OP
+    }
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] code) {
-        if (transformedName.equals("appeng.helpers.DualityInterface")) {
-            System.out.println("[ae2fc] Transforming DualityInterface...");
-            ClassReader reader = new ClassReader(code);
-            ClassWriter writer = new ClassWriter(reader, 0);
-            reader.accept(new TransformDualityInterface(Opcodes.ASM5, writer), 0);
-            return writer.toByteArray();
-        }
-        return code;
+    protected ClassVisitor getClassMapper(ClassVisitor downstream) {
+        return new TransformDualityInterface(Opcodes.ASM5, downstream);
     }
 
     private static class TransformDualityInterface extends ClassVisitor {
