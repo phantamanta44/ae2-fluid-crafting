@@ -1,7 +1,8 @@
 package xyz.phanta.ae2fc.coremod.transform;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import xyz.phanta.ae2fc.coremod.FcClassTransformer;
 
 public class ContainerInterfaceTerminalTransformer extends FcClassTransformer.ClassMapper {

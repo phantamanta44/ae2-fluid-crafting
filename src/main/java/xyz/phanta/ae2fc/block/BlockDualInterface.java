@@ -3,9 +3,6 @@ package xyz.phanta.ae2fc.block;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IOrientable;
 import appeng.block.AEBaseTileBlock;
-import appeng.block.misc.BlockInterface;
-import appeng.core.sync.GuiBridge;
-import appeng.tile.misc.TileInterface;
 import appeng.util.Platform;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -20,8 +17,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.tile.TileDualInterface;
 

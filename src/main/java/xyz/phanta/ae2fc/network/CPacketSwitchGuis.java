@@ -1,6 +1,5 @@
 package xyz.phanta.ae2fc.network;
 
-import appeng.api.parts.IPartHost;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.util.Platform;
@@ -13,7 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
-import xyz.phanta.ae2fc.tile.TileDualInterface;
 
 import javax.annotation.Nullable;
 

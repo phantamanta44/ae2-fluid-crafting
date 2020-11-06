@@ -7,12 +7,10 @@ import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerInterface;
 import appeng.container.implementations.ContainerPriority;
-import appeng.core.sync.GuiBridge;
 import appeng.fluids.container.ContainerFluidInterface;
 import appeng.fluids.helper.IFluidInterfaceHost;
 import appeng.helpers.IInterfaceHost;
 import appeng.helpers.IPriorityHost;
-import appeng.tile.networking.TileCableBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -55,27 +53,6 @@ public class InventoryHandler implements IGuiHandler {
                 TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
                 if (tile instanceof TileBurette) {
                     return new ContainerBurette(player.inventory, (TileBurette)tile);
-                }
-                break;
-            }
-            case 4: {
-                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-                if (tile instanceof TileDualInterface) {
-                    return new ContainerInterface(player.inventory, (TileDualInterface)tile);
-                }
-                break;
-            }
-            case 5: {
-                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-                if (tile instanceof TileDualInterface) {
-                    return new ContainerFluidInterface(player.inventory, (TileDualInterface)tile);
-                }
-                break;
-            }
-            case 6: {
-                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-                if (tile instanceof TileDualInterface) {
-                    return new ContainerPriority(player.inventory, (TileDualInterface)tile);
                 }
                 break;
             }

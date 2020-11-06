@@ -26,7 +26,6 @@ import xyz.phanta.ae2fc.util.FluidConvertingInventoryCrafting;
 import xyz.phanta.ae2fc.util.FluidConvertingItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
 
 public class CoreModHooks {
 

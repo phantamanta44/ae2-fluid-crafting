@@ -1,6 +1,5 @@
 package xyz.phanta.ae2fc.tile;
 
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
@@ -39,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
-import xyz.phanta.ae2fc.block.BlockDualInterface;
 import xyz.phanta.ae2fc.init.FcBlocks;
 
 import javax.annotation.Nullable;
@@ -50,17 +48,6 @@ import java.util.List;
 public class TileDualInterface extends AENetworkInvTile implements IGridTickable, IInventoryDestination, IInterfaceHost, IPriorityHost, IFluidInterfaceHost {
     public TileDualInterface() {
         super();
-//        //modify "private final DualityInterface duality" to "DualityDInterface"
-//        try {
-//            Field field = ReflectionHelper.findField(TileInterface.class, "duality");
-//            field.setAccessible(true);
-//            Field modifiersField = ReflectionHelper.findField(Field.class, "modifiers");
-//            modifiersField.setAccessible(true);
-//            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-//            field.set(this, new DualityDInterface(this.getProxy(), this));
-//        } catch (IllegalAccessException e){
-//            e.printStackTrace();
-//        }
     }
     private final DualityFluidInterface fluid_duality = new DualityFluidInterface(this.getProxy(), this);
     private final DualityInterface item_duality = new DualityInterface(this.getProxy(), this);
