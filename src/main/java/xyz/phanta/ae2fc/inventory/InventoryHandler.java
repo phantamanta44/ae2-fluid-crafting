@@ -1,18 +1,26 @@
 package xyz.phanta.ae2fc.inventory;
 
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
+import appeng.container.implementations.ContainerInterface;
+import appeng.container.implementations.ContainerPriority;
+import appeng.core.sync.GuiBridge;
+import appeng.fluids.container.ContainerFluidInterface;
+import appeng.fluids.helper.IFluidInterfaceHost;
+import appeng.helpers.IInterfaceHost;
+import appeng.helpers.IPriorityHost;
+import appeng.tile.networking.TileCableBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import xyz.phanta.ae2fc.client.gui.GuiBurette;
-import xyz.phanta.ae2fc.client.gui.GuiFluidPacketDecoder;
-import xyz.phanta.ae2fc.client.gui.GuiFluidPatternEncoder;
-import xyz.phanta.ae2fc.client.gui.GuiIngredientBuffer;
-import xyz.phanta.ae2fc.tile.TileBurette;
-import xyz.phanta.ae2fc.tile.TileFluidPacketDecoder;
-import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
-import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
+import xyz.phanta.ae2fc.client.gui.*;
+import xyz.phanta.ae2fc.parts.PartDualInterface;
+import xyz.phanta.ae2fc.tile.*;
 
 import javax.annotation.Nullable;
 
@@ -50,6 +58,89 @@ public class InventoryHandler implements IGuiHandler {
                 }
                 break;
             }
+            case 4: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileDualInterface) {
+                    return new ContainerInterface(player.inventory, (TileDualInterface)tile);
+                }
+                break;
+            }
+            case 5: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileDualInterface) {
+                    return new ContainerFluidInterface(player.inventory, (TileDualInterface)tile);
+                }
+                break;
+            }
+            case 6: {
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TileDualInterface) {
+                    return new ContainerPriority(player.inventory, (TileDualInterface)tile);
+                }
+                break;
+            }
+        }
+        // Dual GUI!! ID = "id << 4 | side"
+        final AEPartLocation side = AEPartLocation.fromOrdinal( id & 0x07 );
+        final int ID = id >> 4;
+        switch (ID) {
+            case 4: { // ITEM
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                IInterfaceHost te = null;
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        te = (PartDualInterface)part;
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    te = (TileDualInterface)tile;
+                if (te == null) break;
+                AEBaseContainer bc =  new ContainerInterface(player.inventory, te);
+                bc.setOpenContext(new ContainerOpenContext(te));
+                bc.getOpenContext().setWorld( world );
+                bc.getOpenContext().setX( x );
+                bc.getOpenContext().setY( y );
+                bc.getOpenContext().setZ( z );
+                bc.getOpenContext().setSide( side );
+                return bc;
+            }
+            case 5: { // FLUID
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                IFluidInterfaceHost te = null;
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        te = (PartDualInterface)part;
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    te = (TileDualInterface)tile;
+                if (te == null) break;
+                AEBaseContainer bc =  new ContainerFluidInterface(player.inventory, te);
+                bc.setOpenContext(new ContainerOpenContext(te));
+                bc.getOpenContext().setWorld( world );
+                bc.getOpenContext().setX( x );
+                bc.getOpenContext().setY( y );
+                bc.getOpenContext().setZ( z );
+                bc.getOpenContext().setSide( side );
+                return bc;
+            }
+            case 6: { // PRIORITY
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                IPriorityHost te = null;
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        te = (PartDualInterface)part;
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    te = (TileDualInterface)tile;
+                if (te == null) break;
+                AEBaseContainer bc =  new ContainerPriority(player.inventory, te);
+                bc.setOpenContext(new ContainerOpenContext(te));
+                bc.getOpenContext().setWorld( world );
+                bc.getOpenContext().setX( x );
+                bc.getOpenContext().setY( y );
+                bc.getOpenContext().setZ( z );
+                bc.getOpenContext().setSide( side );
+                return bc;
+            }
         }
         return null;
     }
@@ -84,6 +175,41 @@ public class InventoryHandler implements IGuiHandler {
                 if (tile instanceof TileBurette) {
                     return new GuiBurette(player.inventory, (TileBurette)tile);
                 }
+                break;
+            }
+        }
+        // Dual GUI!! ID = "id << 4 | side"
+        final AEPartLocation side = AEPartLocation.fromOrdinal( id & 0x07 );
+        final int ID = id >> 4;
+        switch (ID) {
+            case 4: { // ITEM
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        return new GuiItemDualInterface(player.inventory, (PartDualInterface)part);
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    return new GuiItemDualInterface(player.inventory, (TileDualInterface)tile);
+                break;
+            }
+            case 5: { // FLUID
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        return new GuiFluidDualInterface(player.inventory, (PartDualInterface)part);
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    return new GuiFluidDualInterface(player.inventory, (TileDualInterface)tile);
+                break;
+            }
+            case 6: { // PRIORITY
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof IPartHost) { // PART
+                    IPart part = ((IPartHost) tile).getPart(side);
+                    if(part instanceof PartDualInterface)
+                        return new GuiPriority(player.inventory, (PartDualInterface)part);
+                } else if (tile instanceof TileDualInterface) // BLOCK
+                    return new GuiPriority(player.inventory, (TileDualInterface)tile);
                 break;
             }
         }

@@ -10,10 +10,12 @@ public class NameConst {
     public static final String BLOCK_FLUID_PACKET_DECODER = "fluid_packet_decoder";
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
     public static final String BLOCK_BURETTE = "burette";
+    public static final String BLOCK_DUAL_INTERFACE = "dual_interface";
 
     public static final String ITEM_FLUID_DROP = "fluid_drop";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_DENSE_ENCODED_PATTERN = "dense_encoded_pattern";
+    public static final String ITEM_PART_DUAL_INTERFACE = "part_dual_interface";
 
     public static final String TT_KEY = Ae2FluidCrafting.MOD_ID + ".tooltip.";
     public static final String TT_FLUID_PACKET = TT_KEY + "fluid_packet";

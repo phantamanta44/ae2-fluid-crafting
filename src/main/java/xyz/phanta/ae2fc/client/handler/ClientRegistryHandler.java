@@ -1,5 +1,6 @@
 package xyz.phanta.ae2fc.client.handler;
 
+import appeng.api.AEApi;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import xyz.phanta.ae2fc.client.model.DenseEncodedPatternModel;
 import xyz.phanta.ae2fc.client.model.FluidPacketModel;
 import xyz.phanta.ae2fc.client.model.HasCustomModel;
 import xyz.phanta.ae2fc.handler.RegistryHandler;
+import xyz.phanta.ae2fc.parts.PartDualInterface;
 
 public class ClientRegistryHandler extends RegistryHandler {
 
@@ -26,6 +28,7 @@ public class ClientRegistryHandler extends RegistryHandler {
         for (Pair<String, Item> entry : items) {
             registerModel(entry.getLeft(), entry.getRight());
         }
+        AEApi.instance().registries().partModels().registerModels(PartDualInterface.MODEL_BASE, PartDualInterface.MODEL_ON, PartDualInterface.MODEL_OFF, PartDualInterface.MODEL_HAS_CHANNEL);
     }
 
     private static void registerModel(String key, Item item) {

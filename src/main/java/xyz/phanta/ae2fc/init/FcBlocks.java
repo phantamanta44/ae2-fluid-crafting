@@ -18,6 +18,8 @@ public class FcBlocks {
     public static BlockIngredientBuffer INGREDIENT_BUFFER;
     @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_BURETTE)
     public static BlockBurette BURETTE;
+    @GameRegistry.ObjectHolder(Ae2FluidCrafting.MOD_ID + ":" + NameConst.BLOCK_DUAL_INTERFACE)
+    public static BlockDualInterface DUAL_INTERFACE;
 
     public static void init(RegistryHandler regHandler) {
         regHandler.block(NameConst.BLOCK_FLUID_DISCRETIZER, new BlockFluidDiscretizer());
@@ -25,6 +27,7 @@ public class FcBlocks {
         regHandler.block(NameConst.BLOCK_FLUID_PACKET_DECODER, new BlockFluidPacketDecoder());
         regHandler.block(NameConst.BLOCK_INGREDIENT_BUFFER, new BlockIngredientBuffer());
         regHandler.block(NameConst.BLOCK_BURETTE, new BlockBurette());
+        regHandler.block(NameConst.BLOCK_DUAL_INTERFACE, new BlockDualInterface());
     }
 
 }

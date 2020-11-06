@@ -30,6 +30,9 @@ public class FcClassTransformer implements IClassTransformer {
             case "thelm.packagedauto.tile.TileUnpackager":
                 tform = TileUnpackagerTransformer.INSTANCE;
                 break;
+            case "appeng.container.implementations.ContainerInterfaceTerminal":
+                tform = ContainerInterfaceTerminalTransformer.INSTANCE;
+                break;
             default:
                 return code;
         }
