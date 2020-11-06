@@ -104,15 +104,19 @@ public class PartDualInterface extends PartBasicState implements IGridTickable, 
     @Override
     public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
-        this.item_duality.readFromNBT(data);
-        this.fluid_duality.readFromNBT(data);
+        this.item_duality.readFromNBT(data.getCompoundTag("itemDuality"));
+        this.fluid_duality.readFromNBT(data.getCompoundTag("fluidDuality"));
     }
 
     @Override
     public void writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
-        this.item_duality.writeToNBT(data);
-        this.fluid_duality.writeToNBT(data);
+        NBTTagCompound itemDuality = new NBTTagCompound();
+        NBTTagCompound fluidDuality = new NBTTagCompound();
+        this.item_duality.writeToNBT(itemDuality);
+        this.fluid_duality.writeToNBT(fluidDuality);
+        data.setTag("itemDuality", itemDuality);
+        data.setTag("fluidDuality", fluidDuality);
     }
 
     @Override
@@ -151,9 +155,8 @@ public class PartDualInterface extends PartBasicState implements IGridTickable, 
         BlockPos blockPos = te.getPos();
         if (Platform.isServer()) {
             p.openGui(Ae2FluidCrafting.INSTANCE, 4 << 4 | this.getSide().ordinal(), te.getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override

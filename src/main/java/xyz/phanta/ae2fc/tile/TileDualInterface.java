@@ -144,8 +144,12 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
         data.setBoolean( "omniDirectional", this.omniDirectional );
-        this.item_duality.writeToNBT(data);
-        this.fluid_duality.writeToNBT(data);
+        NBTTagCompound itemDuality = new NBTTagCompound();
+        NBTTagCompound fluidDuality = new NBTTagCompound();
+        this.item_duality.writeToNBT(itemDuality);
+        this.fluid_duality.writeToNBT(fluidDuality);
+        data.setTag("itemDuality", itemDuality);
+        data.setTag("fluidDuality", fluidDuality);
         return data;
     }
 
@@ -153,8 +157,8 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
         this.omniDirectional = data.getBoolean( "omniDirectional" );
-        this.item_duality.readFromNBT(data);
-        this.fluid_duality.readFromNBT(data);
+        this.item_duality.readFromNBT(data.getCompoundTag("itemDuality"));
+        this.fluid_duality.readFromNBT(data.getCompoundTag("fluidDuality"));
     }
 
     @Override
