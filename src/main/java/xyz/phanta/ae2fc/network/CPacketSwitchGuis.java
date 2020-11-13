@@ -7,11 +7,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.util.Ae2GuiUtils;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +22,6 @@ public class CPacketSwitchGuis implements IMessage {
     }
 
     public CPacketSwitchGuis() {
-
     }
 
     @Override
@@ -43,18 +41,15 @@ public class CPacketSwitchGuis implements IMessage {
             EntityPlayerMP player = ctx.getServerHandler().player;
             final Container c = player.openContainer;
             if (c instanceof AEBaseContainer) {
-                if (Platform.isServer()){
+                if (Platform.isServer()) {
                     AEBaseContainer bc = (AEBaseContainer) c;
                     ContainerOpenContext context = bc.getOpenContext();
-                    if (context != null){
+                    if (context != null) {
                         TileEntity te = context.getTile();
-                        BlockPos blockPos = te.getPos();
-                        player.openGui(Ae2FluidCrafting.INSTANCE,
-                                message.newGui << 4 | context.getSide().ordinal(),
-                                te.getWorld(),
-                                blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                        if (te != null) {
+                            Ae2GuiUtils.openGui(player, te, Ae2GuiUtils.valueOf(message.newGui), context.getSide());
+                        }
                     }
-
                 }
             }
             return null;

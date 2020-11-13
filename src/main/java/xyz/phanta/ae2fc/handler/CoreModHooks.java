@@ -71,18 +71,20 @@ public class CoreModHooks {
         return stacks;
     }
 
-    public static IMachineSet getMachines(IGrid grid, Class<? extends IGridHost> c){
-        if (c == TileInterface.class){
-            IMachineSet m1 =  grid.getMachines(c);
-            IMachineSet m2 =  grid.getMachines(TileDualInterface.class);
-            if (m1 instanceof MachineSet && m2 instanceof MachineSet)
-                ((MachineSet) m1).addAll((MachineSet)m2);
+    public static IMachineSet getMachines(IGrid grid, Class<? extends IGridHost> c) {
+        if (c == TileInterface.class) {
+            IMachineSet m1 = grid.getMachines(c);
+            IMachineSet m2 = grid.getMachines(TileDualInterface.class);
+            if (m1 instanceof MachineSet && m2 instanceof MachineSet) {
+                ((MachineSet) m1).addAll((MachineSet) m2);
+            }
             return m1;
-        } else if (c == PartInterface.class){
-            IMachineSet m1 =  grid.getMachines(c);
-            IMachineSet m2 =  grid.getMachines(PartDualInterface.class);
-            if (m1 instanceof MachineSet && m2 instanceof MachineSet)
-                ((MachineSet) m1).addAll((MachineSet)m2);
+        } else if (c == PartInterface.class) {
+            IMachineSet m1 = grid.getMachines(c);
+            IMachineSet m2 = grid.getMachines(PartDualInterface.class);
+            if (m1 instanceof MachineSet && m2 instanceof MachineSet) {
+                ((MachineSet) m1).addAll((MachineSet) m2);
+            }
             return m1;
         }
         return grid.getMachines(c);

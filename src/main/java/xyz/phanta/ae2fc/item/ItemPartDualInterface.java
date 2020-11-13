@@ -27,7 +27,8 @@ public class ItemPartDualInterface extends Item implements IPartItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
+                                      float hitX, float hitY, float hitZ) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(hand), pos, side, player, hand, world);
     }
 }

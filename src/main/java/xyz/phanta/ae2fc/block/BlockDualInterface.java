@@ -17,8 +17,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.tile.TileDualInterface;
+import xyz.phanta.ae2fc.util.Ae2GuiUtils;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ public class BlockDualInterface extends AEBaseTileBlock {
 
     @Override
     protected IProperty[] getAEStates() {
-        return new IProperty[]{OMNIDIRECTIONAL};
+        return new IProperty[] {OMNIDIRECTIONAL};
     }
 
     @Override
@@ -42,14 +42,16 @@ public class BlockDualInterface extends AEBaseTileBlock {
     }
 
     @Override
-    public boolean onActivated(final World w, final BlockPos pos, final EntityPlayer p, final EnumHand hand, final @Nullable ItemStack heldItem, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+    public boolean onActivated(final World w, final BlockPos pos, final EntityPlayer p, final EnumHand hand,
+                               final @Nullable ItemStack heldItem, final EnumFacing side, final float hitX,
+                               final float hitY, final float hitZ) {
         if (p.isSneaking()) {
             return false;
         }
         final TileDualInterface tg = this.getTileEntity(w, pos);
         if (tg != null) {
             if (Platform.isServer()) {
-                p.openGui(Ae2FluidCrafting.INSTANCE, 4 << 4 | AEPartLocation.INTERNAL.ordinal(), w, pos.getX(), pos.getY(), pos.getZ());
+                Ae2GuiUtils.openGui(p, tg, Ae2GuiUtils.DUAL_ITEM_INTERFACE, AEPartLocation.INTERNAL);
             }
             return true;
         }

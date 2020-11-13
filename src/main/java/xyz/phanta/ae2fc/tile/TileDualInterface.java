@@ -39,32 +39,35 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.init.FcBlocks;
+import xyz.phanta.ae2fc.util.Ae2GuiUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
-public class TileDualInterface extends AENetworkInvTile implements IGridTickable, IInventoryDestination, IInterfaceHost, IPriorityHost, IFluidInterfaceHost {
+public class TileDualInterface extends AENetworkInvTile
+        implements IGridTickable, IInventoryDestination, IInterfaceHost, IPriorityHost, IFluidInterfaceHost {
     public TileDualInterface() {
         super();
     }
-    private final DualityFluidInterface fluid_duality = new DualityFluidInterface(this.getProxy(), this);
-    private final DualityInterface item_duality = new DualityInterface(this.getProxy(), this);
+
+    private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this);
+    private final DualityInterface itemDuality = new DualityInterface(this.getProxy(), this);
 
     // Indicates that this interface has no specific direction set
     private boolean omniDirectional = true;
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
-        this.item_duality.notifyNeighbors();
-        this.fluid_duality.notifyNeighbors();
+        this.itemDuality.notifyNeighbors();
+        this.fluidDuality.notifyNeighbors();
     }
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkPowerStatusChange c) {
-        this.item_duality.notifyNeighbors();
-        this.fluid_duality.notifyNeighbors();
+        this.itemDuality.notifyNeighbors();
+        this.fluidDuality.notifyNeighbors();
     }
 
     public void setSide(final EnumFacing facing) {
@@ -76,7 +79,8 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
         if (!this.omniDirectional && this.getForward() == facing.getOpposite()) {
             newForward = facing;
-        } else if (!this.omniDirectional && (this.getForward() == facing || this.getForward() == facing.getOpposite())) {
+        } else if (!this.omniDirectional
+                && (this.getForward() == facing || this.getForward() == facing.getOpposite())) {
             this.omniDirectional = true;
         } else if (this.omniDirectional) {
             newForward = facing.getOpposite();
@@ -110,13 +114,13 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
     @Override
     public void getDrops(final World w, final BlockPos pos, final List<ItemStack> drops) {
-        this.item_duality.addDrops(drops);
+        this.itemDuality.addDrops(drops);
     }
 
     @Override
     public void gridChanged() {
-        this.item_duality.gridChanged();
-        this.fluid_duality.gridChanged();
+        this.itemDuality.gridChanged();
+        this.fluidDuality.gridChanged();
     }
 
     @Override
@@ -124,17 +128,17 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
         this.configureNodeSides();
 
         super.onReady();
-        this.item_duality.initialize();
+        this.itemDuality.initialize();
     }
 
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
-        data.setBoolean( "omniDirectional", this.omniDirectional );
+        data.setBoolean("omniDirectional", this.omniDirectional);
         NBTTagCompound itemDuality = new NBTTagCompound();
         NBTTagCompound fluidDuality = new NBTTagCompound();
-        this.item_duality.writeToNBT(itemDuality);
-        this.fluid_duality.writeToNBT(fluidDuality);
+        this.itemDuality.writeToNBT(itemDuality);
+        this.fluidDuality.writeToNBT(fluidDuality);
         data.setTag("itemDuality", itemDuality);
         data.setTag("fluidDuality", fluidDuality);
         return data;
@@ -143,9 +147,9 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
     @Override
     public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
-        this.omniDirectional = data.getBoolean( "omniDirectional" );
-        this.item_duality.readFromNBT(data.getCompoundTag("itemDuality"));
-        this.fluid_duality.readFromNBT(data.getCompoundTag("fluidDuality"));
+        this.omniDirectional = data.getBoolean("omniDirectional");
+        this.itemDuality.readFromNBT(data.getCompoundTag("itemDuality"));
+        this.fluidDuality.readFromNBT(data.getCompoundTag("fluidDuality"));
     }
 
     @Override
@@ -174,50 +178,55 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
     @Override
     public boolean canInsert(final ItemStack stack) {
-        return this.item_duality.canInsert(stack);
+        return this.itemDuality.canInsert(stack);
     }
 
     @Override
     public IItemHandler getInventoryByName(final String name) {
-        return this.item_duality.getInventoryByName(name);
+        return this.itemDuality.getInventoryByName(name);
     }
 
     @Override
     public TickingRequest getTickingRequest(final IGridNode node) {
-        TickingRequest item = this.item_duality.getTickingRequest(node);
-        TickingRequest fluid = this.fluid_duality.getTickingRequest(node);
-        return new TickingRequest(Math.min(item.minTickRate, fluid.minTickRate), Math.max(item.maxTickRate, fluid.maxTickRate), item.isSleeping == fluid.isSleeping && item.isSleeping, true);
+        TickingRequest item = this.itemDuality.getTickingRequest(node);
+        TickingRequest fluid = this.fluidDuality.getTickingRequest(node);
+        return new TickingRequest(Math.min(item.minTickRate, fluid.minTickRate),
+                Math.max(item.maxTickRate, fluid.maxTickRate), item.isSleeping == fluid.isSleeping && item.isSleeping,
+                true);
     }
 
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall) {
-        TickRateModulation item = this.item_duality.tickingRequest(node, ticksSinceLastCall);
-        TickRateModulation fluid = this.fluid_duality.tickingRequest(node, ticksSinceLastCall);
-        if (item == fluid)
+        TickRateModulation item = this.itemDuality.tickingRequest(node, ticksSinceLastCall);
+        TickRateModulation fluid = this.fluidDuality.tickingRequest(node, ticksSinceLastCall);
+        if (item == fluid) {
             return item;
-        if (item == TickRateModulation.SLOWER || fluid == TickRateModulation.SLOWER)
+        }
+        if (item == TickRateModulation.SLOWER || fluid == TickRateModulation.SLOWER) {
             return TickRateModulation.SLOWER;
+        }
         return TickRateModulation.URGENT;
     }
 
     @Override
     public IItemHandler getInternalInventory() {
-        return this.item_duality.getInternalInventory();
+        return this.itemDuality.getInternalInventory();
     }
 
     @Override
-    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc, final ItemStack removed, final ItemStack added) {
-        this.item_duality.onChangeInventory(inv, slot, mc, removed, added);
+    public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc,
+                                  final ItemStack removed, final ItemStack added) {
+        this.itemDuality.onChangeInventory(inv, slot, mc, removed, added);
     }
 
     @Override
     public DualityInterface getInterfaceDuality() {
-        return this.item_duality;
+        return this.itemDuality;
     }
 
     @Override
     public DualityFluidInterface getDualityFluidInterface() {
-        return this.fluid_duality;
+        return this.fluidDuality;
     }
 
     @Override
@@ -235,52 +244,52 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
     @Override
     public IConfigManager getConfigManager() {
-        return this.item_duality.getConfigManager();
+        return this.itemDuality.getConfigManager();
     }
 
     @Override
     public boolean pushPattern(final ICraftingPatternDetails patternDetails, final InventoryCrafting table) {
-        return this.item_duality.pushPattern(patternDetails, table);
+        return this.itemDuality.pushPattern(patternDetails, table);
     }
 
     @Override
     public boolean isBusy() {
-        return this.item_duality.isBusy();
+        return this.itemDuality.isBusy();
     }
 
     @Override
     public void provideCrafting(final ICraftingProviderHelper craftingTracker) {
-        this.item_duality.provideCrafting(craftingTracker);
+        this.itemDuality.provideCrafting(craftingTracker);
     }
 
     @Override
     public int getInstalledUpgrades(final Upgrades u) {
-        return this.item_duality.getInstalledUpgrades(u);
+        return this.itemDuality.getInstalledUpgrades(u);
     }
 
     @Override
     public ImmutableSet<ICraftingLink> getRequestedJobs() {
-        return this.item_duality.getRequestedJobs();
+        return this.itemDuality.getRequestedJobs();
     }
 
     @Override
     public IAEItemStack injectCraftedItems(final ICraftingLink link, final IAEItemStack items, final Actionable mode) {
-        return this.item_duality.injectCraftedItems(link, items, mode);
+        return this.itemDuality.injectCraftedItems(link, items, mode);
     }
 
     @Override
     public void jobStateChange(final ICraftingLink link) {
-        this.item_duality.jobStateChange(link);
+        this.itemDuality.jobStateChange(link);
     }
 
     @Override
     public int getPriority() {
-        return this.item_duality.getPriority();
+        return this.itemDuality.getPriority();
     }
 
     @Override
     public void setPriority(final int newValue) {
-        this.item_duality.setPriority(newValue);
+        this.itemDuality.setPriority(newValue);
     }
 
     /**
@@ -292,16 +301,17 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return this.item_duality.hasCapability(capability, facing) || this.fluid_duality.hasCapability(capability, facing) || super.hasCapability(capability, facing);
+        return this.itemDuality.hasCapability(capability, facing)
+                || this.fluidDuality.hasCapability(capability, facing) || super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        T result = this.item_duality.getCapability(capability, facing);
+        T result = this.itemDuality.getCapability(capability, facing);
         if (result != null) {
             return result;
         }
-        result = this.fluid_duality.getCapability(capability, facing);
+        result = this.fluidDuality.getCapability(capability, facing);
         if (result != null) {
             return result;
         }
@@ -310,12 +320,11 @@ public class TileDualInterface extends AENetworkInvTile implements IGridTickable
 
     @Override
     public ItemStack getItemStackRepresentation() {
-//        return AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
         return new ItemStack(FcBlocks.DUAL_INTERFACE);
     }
 
     @Override
     public GuiBridge getGuiBridge() {
-        return GuiBridge.values()[4];
+        return GuiBridge.values()[Ae2GuiUtils.DUAL_ITEM_INTERFACE.ordinal()];
     }
 }
