@@ -54,21 +54,18 @@ import java.util.List;
 public class PartDualInterface extends PartBasicState
         implements IGridTickable, IInventoryDestination, IInterfaceHost, IAEAppEngInventory, IPriorityHost,
         IFluidInterfaceHost {
-    public static final ResourceLocation MODEL_BASE =
-            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_base");
-    public static final ResourceLocation MODEL_ON = new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_on");
-    public static final ResourceLocation MODEL_OFF =
-            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_off");
-    public static final ResourceLocation MODEL_HAS_CHANNEL =
-            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_has_channel");
-    @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, MODEL_OFF);
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, MODEL_ON);
+    public static ResourceLocation[] MODELS = new ResourceLocation[] {
+            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_base"),
+            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_on"),
+            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_off"),
+            new ResourceLocation(Ae2FluidCrafting.MOD_ID, "part/interface_has_channel")
+    };
 
-    @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, MODEL_HAS_CHANNEL);
+    public static final PartModel MODELS_OFF = new PartModel(MODELS[0], MODELS[2]);
+    public static final PartModel MODELS_ON = new PartModel(MODELS[0], MODELS[1]);
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS[0], MODELS[3]);
 
     private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this);
     private final DualityInterface itemDuality = new DualityInterface(this.getProxy(), this);
@@ -153,15 +150,8 @@ public class PartDualInterface extends PartBasicState
 
     @Override
     public boolean onPartActivate(final EntityPlayer p, final EnumHand hand, final Vec3d pos) {
-        if (p.isSneaking()) {
-            return false;
-        }
-        TileEntity te = this.getTileEntity();
-        if (te == null) {
-            return false;
-        }
         if (Platform.isServer()) {
-            Ae2GuiUtils.openGui(p, te, Ae2GuiUtils.DUAL_ITEM_INTERFACE, this.getSide());
+            Ae2GuiUtils.openGui(p, this.getTileEntity(), Ae2GuiUtils.DUAL_ITEM_INTERFACE, this.getSide());
         }
         return true;
     }

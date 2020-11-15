@@ -8,7 +8,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
 import xyz.phanta.ae2fc.util.Ae2GuiUtils;
+import xyz.phanta.ae2fc.util.Ae2Reflect;
 
 import java.io.IOException;
 
@@ -37,7 +39,7 @@ public class GuiItemDualInterface extends GuiInterface {
 
     @Override
     protected void actionPerformed(final GuiButton btn) throws IOException {
-        if (btn == ReflectionHelper.getPrivateValue(GuiInterface.class, this, "priority")) {
+        if (btn == Ae2ReflectClient.getAeButton(GuiInterface.class, this, "priority")) {
             Ae2GuiUtils.switchGui(Ae2GuiUtils.MY_PRIORITY);
             return;
         }

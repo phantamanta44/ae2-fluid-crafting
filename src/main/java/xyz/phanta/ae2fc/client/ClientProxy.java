@@ -1,5 +1,6 @@
 package xyz.phanta.ae2fc.client;
 
+import appeng.api.util.AEColor;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
@@ -46,6 +47,7 @@ public class ClientProxy extends CommonProxy {
             FluidStack fluid = ItemFluidPacket.getFluidStack(s);
             return fluid != null ? fluid.getFluid().getColor(fluid) : -1;
         }, FcItems.FLUID_PACKET);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler((s, i) -> AEColor.TRANSPARENT.getVariantByTintIndex(i), FcItems.PART_FLUID_PATTERN_TERMINAL);
     }
 
 }
