@@ -10,15 +10,19 @@ public class NameConst {
     public static final String BLOCK_FLUID_PACKET_DECODER = "fluid_packet_decoder";
     public static final String BLOCK_INGREDIENT_BUFFER = "ingredient_buffer";
     public static final String BLOCK_BURETTE = "burette";
+    public static final String BLOCK_DUAL_INTERFACE = "dual_interface";
 
     public static final String ITEM_FLUID_DROP = "fluid_drop";
     public static final String ITEM_FLUID_PACKET = "fluid_packet";
     public static final String ITEM_DENSE_ENCODED_PATTERN = "dense_encoded_pattern";
+    public static final String ITEM_PART_DUAL_INTERFACE = "part_dual_interface";
+    public static final String ITEM_PART_FLUID_PATTERN_TERMINAL = "part_fluid_pattern_terminal";
 
     public static final String TT_KEY = Ae2FluidCrafting.MOD_ID + ".tooltip.";
     public static final String TT_FLUID_PACKET = TT_KEY + "fluid_packet";
     public static final String TT_INVALID_FLUID = TT_KEY + "invalid_fluid";
     public static final String TT_PROCESSING_RECIPE_ONLY = TT_KEY + "processing_recipe_only";
+    public static final String TT_CRAFTING_RECIPE_ONLY = TT_KEY + "crafting_recipe_only";
     public static final String TT_ENCODE_PATTERN = TT_KEY + "encode_pattern";
     public static final String TT_EMPTY = TT_KEY + "empty";
     public static final String TT_DUMP_TANK = TT_KEY + "dump_tank";

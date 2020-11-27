@@ -12,6 +12,8 @@ public class FcJeiPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(
                 new FluidPatternEncoderRecipeTransferHandler(), Constants.UNIVERSAL_RECIPE_TRANSFER_UID);
+        registry.getRecipeTransferRegistry().addRecipeTransferHandler(
+                new FluidPatternTerminalRecipeTransferHandler(), Constants.UNIVERSAL_RECIPE_TRANSFER_UID);
     }
 
 }

@@ -1,12 +1,19 @@
 package xyz.phanta.ae2fc.client.util;
 
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.client.gui.implementations.GuiPatternTerm;
+import appeng.client.gui.implementations.GuiPriority;
 import appeng.client.render.StackSizeRenderer;
+import appeng.core.sync.GuiBridge;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraftforge.common.model.TRSRTransformation;
+import xyz.phanta.ae2fc.inventory.ContainerFluidPatternTerminal;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
@@ -43,6 +50,42 @@ public class Ae2ReflectClient {
             return cItemEncodedPatternBakedModel.newInstance(baseModel, transforms);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to invoke constructor: " + cItemEncodedPatternBakedModel, e);
+        }
+    }
+
+    private static Field findField(Class<?> clazz, String fieldNames) {
+        try {
+            Field f = clazz.getDeclaredField(fieldNames);
+            f.setAccessible(true);
+            return f;
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
+        }
+    }
+
+    public static GuiBridge getPriorityGuiBridge(GuiPriority instance) {
+        try {
+            return (GuiBridge) findField(GuiPriority.class, "OriginalGui").get(instance);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to PriorityGuiBridge reflection hacks!", e);
+        }
+    }
+
+    public static GuiButton getAeButton(@Nonnull Class<? extends AEBaseGui> clazz, @Nonnull AEBaseGui instance,
+                                        @Nonnull String buttonName) {
+        try {
+            return (GuiButton) findField(clazz, buttonName).get(instance);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to AeButton reflection hacks!", e);
+        }
+    }
+
+    public static void setContainerFluidPatternTerminal(GuiPatternTerm instance, ContainerFluidPatternTerminal container) {
+        try {
+            findField(GuiPatternTerm.class, "container").set(instance, container);
+            findField(GuiMEMonitorable.class, "monitorableContainer").set(instance, container);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to AeButton reflection hacks!", e);
         }
     }
 

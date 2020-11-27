@@ -24,10 +24,7 @@ import xyz.phanta.ae2fc.init.FcBlocks;
 import xyz.phanta.ae2fc.init.FcItems;
 import xyz.phanta.ae2fc.integration.pauto.PackagedFluidCrafting;
 import xyz.phanta.ae2fc.inventory.InventoryHandler;
-import xyz.phanta.ae2fc.network.CPacketDumpTank;
-import xyz.phanta.ae2fc.network.CPacketEncodePattern;
-import xyz.phanta.ae2fc.network.CPacketLoadPattern;
-import xyz.phanta.ae2fc.network.CPacketTransposeFluid;
+import xyz.phanta.ae2fc.network.*;
 import xyz.phanta.ae2fc.tile.*;
 import xyz.phanta.ae2fc.util.Ae2Reflect;
 
@@ -51,10 +48,12 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileFluidPacketDecoder.class, Ae2FluidCrafting.resource(NameConst.BLOCK_FLUID_PACKET_DECODER));
         GameRegistry.registerTileEntity(TileIngredientBuffer.class, Ae2FluidCrafting.resource(NameConst.BLOCK_INGREDIENT_BUFFER));
         GameRegistry.registerTileEntity(TileBurette.class, Ae2FluidCrafting.resource(NameConst.BLOCK_BURETTE));
+        GameRegistry.registerTileEntity(TileDualInterface.class, Ae2FluidCrafting.resource(NameConst.BLOCK_DUAL_INTERFACE));
         netHandler.registerMessage(new CPacketEncodePattern.Handler(), CPacketEncodePattern.class, 0, Side.SERVER);
         netHandler.registerMessage(new CPacketLoadPattern.Handler(), CPacketLoadPattern.class, 1, Side.SERVER);
         netHandler.registerMessage(new CPacketDumpTank.Handler(), CPacketDumpTank.class, 2, Side.SERVER);
         netHandler.registerMessage(new CPacketTransposeFluid.Handler(), CPacketTransposeFluid.class, 3, Side.SERVER);
+        netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, 4, Side.SERVER);
         if (Loader.isModLoaded("packagedauto")) {
             PackagedFluidCrafting.init();
         }
