@@ -24,13 +24,12 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
     private final Slot patternSlotIN;
     private final Slot patternSlotOUT;
 
-    public ContainerFluidPatternTerminal(InventoryPlayer ip,
-                                         ITerminalHost monitorable) {
+    public ContainerFluidPatternTerminal(InventoryPlayer ip, ITerminalHost monitorable) {
         super(ip, monitorable);
-        craftingSlots = Ae2Reflect.getContainerPatternTermSlots(this, "craftingSlots");
-        outputSlots = Ae2Reflect.getContainerPatternTermSlots(this, "outputSlots");
-        patternSlotIN = Ae2Reflect.getContainerPatternTermSlot(this, "patternSlotIN");
-        patternSlotOUT = Ae2Reflect.getContainerPatternTermSlot(this, "patternSlotOUT");
+        craftingSlots = Ae2Reflect.getCraftingSlots(this);
+        outputSlots = Ae2Reflect.getOutputSlots(this);
+        patternSlotIN = Ae2Reflect.getPatternSlotIn(this);
+        patternSlotOUT = Ae2Reflect.getPatternSlotOut(this);
     }
 
     @Override
