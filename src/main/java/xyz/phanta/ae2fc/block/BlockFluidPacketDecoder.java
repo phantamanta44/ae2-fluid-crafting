@@ -8,9 +8,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.tile.TileFluidPacketDecoder;
-import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 
 public class BlockFluidPacketDecoder extends AEBaseTileBlock {
 
@@ -28,7 +28,7 @@ public class BlockFluidPacketDecoder extends AEBaseTileBlock {
         TileFluidPacketDecoder tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
-                player.openGui(Ae2FluidCrafting.INSTANCE, 1, world, pos.getX(), pos.getY(), pos.getZ());
+                InventoryHandler.openGui(player, world, pos, facing, GuiType.FLUID_PACKET_DECODER);
             }
             return true;
         }

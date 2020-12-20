@@ -1,19 +1,17 @@
 package xyz.phanta.ae2fc.client.util;
 
 import appeng.client.gui.AEBaseGui;
-import appeng.client.gui.implementations.GuiMEMonitorable;
-import appeng.client.gui.implementations.GuiPatternTerm;
-import appeng.client.gui.implementations.GuiPriority;
+import appeng.client.gui.implementations.*;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.render.StackSizeRenderer;
-import appeng.core.sync.GuiBridge;
+import appeng.fluids.client.gui.GuiFluidInterface;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraftforge.common.model.TRSRTransformation;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternTerminal;
+import xyz.phanta.ae2fc.util.Ae2Reflect;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
@@ -22,26 +20,35 @@ public class Ae2ReflectClient {
 
     private static final Field fAEBaseGui_stackSizeRenderer;
     private static final Constructor<? extends IBakedModel> cItemEncodedPatternBakedModel;
+    private static final Field fGuiPriority_originalGuiBtn;
+    private static final Field fGuiCraftingStatus_originalGuiBtn;
+    private static final Field fGuiPatternTerm_container;
+    private static final Field fGuiMEMonitorable_monitorableContainer;
+    private static final Field fGuiMEMonitorable_craftingStatusBtn;
+    private static final Field fGuiInterface_priority;
+    private static final Field fGuiFluidInterface_priority;
 
     static {
         try {
-            fAEBaseGui_stackSizeRenderer = AEBaseGui.class.getDeclaredField("stackSizeRenderer");
-            fAEBaseGui_stackSizeRenderer.setAccessible(true);
+            fAEBaseGui_stackSizeRenderer = Ae2Reflect.reflectField(AEBaseGui.class, "stackSizeRenderer");
             cItemEncodedPatternBakedModel = (Constructor<? extends IBakedModel>)Class
                     .forName("appeng.client.render.crafting.ItemEncodedPatternBakedModel")
                     .getDeclaredConstructor(IBakedModel.class, ImmutableMap.class);
             cItemEncodedPatternBakedModel.setAccessible(true);
+            fGuiPriority_originalGuiBtn = Ae2Reflect.reflectField(GuiPriority.class, "originalGuiBtn");
+            fGuiCraftingStatus_originalGuiBtn = Ae2Reflect.reflectField(GuiCraftingStatus.class, "originalGuiBtn");
+            fGuiPatternTerm_container = Ae2Reflect.reflectField(GuiPatternTerm.class, "container");
+            fGuiMEMonitorable_monitorableContainer = Ae2Reflect.reflectField(GuiMEMonitorable.class, "monitorableContainer");
+            fGuiMEMonitorable_craftingStatusBtn = Ae2Reflect.reflectField(GuiMEMonitorable.class, "craftingStatusBtn");
+            fGuiInterface_priority = Ae2Reflect.reflectField(GuiInterface.class, "priority");
+            fGuiFluidInterface_priority = Ae2Reflect.reflectField(GuiFluidInterface.class, "priority");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
     }
 
     public static StackSizeRenderer getStackSizeRenderer(AEBaseGui gui) {
-        try {
-            return (StackSizeRenderer)fAEBaseGui_stackSizeRenderer.get(gui);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Failed to read field: " + fAEBaseGui_stackSizeRenderer, e);
-        }
+        return Ae2Reflect.readField(gui, fAEBaseGui_stackSizeRenderer);
     }
 
     public static IBakedModel bakeEncodedPatternModel(IBakedModel baseModel,
@@ -53,40 +60,29 @@ public class Ae2ReflectClient {
         }
     }
 
-    private static Field findField(Class<?> clazz, String fieldNames) {
-        try {
-            Field f = clazz.getDeclaredField(fieldNames);
-            f.setAccessible(true);
-            return f;
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
-        }
+    public static GuiTabButton getOriginalGuiButton(GuiPriority gui) {
+        return Ae2Reflect.readField(gui, fGuiPriority_originalGuiBtn);
     }
 
-    public static GuiBridge getPriorityGuiBridge(GuiPriority instance) {
-        try {
-            return (GuiBridge) findField(GuiPriority.class, "OriginalGui").get(instance);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to PriorityGuiBridge reflection hacks!", e);
-        }
+    public static GuiTabButton getOriginalGuiButton(GuiCraftingStatus gui) {
+        return Ae2Reflect.readField(gui, fGuiCraftingStatus_originalGuiBtn);
     }
 
-    public static GuiButton getAeButton(@Nonnull Class<? extends AEBaseGui> clazz, @Nonnull AEBaseGui instance,
-                                        @Nonnull String buttonName) {
-        try {
-            return (GuiButton) findField(clazz, buttonName).get(instance);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to AeButton reflection hacks!", e);
-        }
+    public static void setGuiContainer(GuiPatternTerm instance, ContainerFluidPatternTerminal container) {
+        Ae2Reflect.writeField(instance, fGuiPatternTerm_container, container);
+        Ae2Reflect.writeField(instance, fGuiMEMonitorable_monitorableContainer, container);
     }
 
-    public static void setContainerFluidPatternTerminal(GuiPatternTerm instance, ContainerFluidPatternTerminal container) {
-        try {
-            findField(GuiPatternTerm.class, "container").set(instance, container);
-            findField(GuiMEMonitorable.class, "monitorableContainer").set(instance, container);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to AeButton reflection hacks!", e);
-        }
+    public static GuiTabButton getCraftingStatusButton(GuiMEMonitorable gui) {
+        return Ae2Reflect.readField(gui, fGuiMEMonitorable_craftingStatusBtn);
+    }
+
+    public static GuiTabButton getPriorityButton(GuiInterface gui) {
+        return Ae2Reflect.readField(gui, fGuiInterface_priority);
+    }
+
+    public static GuiTabButton getPriorityButton(GuiFluidInterface gui) {
+        return Ae2Reflect.readField(gui, fGuiFluidInterface_priority);
     }
 
 }

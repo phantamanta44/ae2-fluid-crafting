@@ -10,6 +10,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.util.Ae2Reflect;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
+
     private final Slot[] craftingSlots;
     private final Slot[] outputSlots;
     private final Slot patternSlotIN;
@@ -36,6 +38,22 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
     public void encode() {
         if (!checkHasFluidPattern()) {
             super.encode();
+            return;
+        }
+        ItemStack stack = this.patternSlotOUT.getStack();
+        if (stack.isEmpty()) {
+            stack = this.patternSlotIN.getStack();
+            if (stack.isEmpty() || !isPattern(stack)) {
+                return;
+            }
+            if (stack.getCount() == 1) {
+                this.patternSlotIN.putStack(ItemStack.EMPTY);
+            } else {
+                stack.shrink(1);
+            }
+            encodeFluidPattern();
+        } else if (isPattern(stack)) {
+            encodeFluidPattern();
         }
     }
 
@@ -43,83 +61,79 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
         if (this.craftingMode) {
             return false;
         }
-        boolean hasFluid = false;
-        boolean craftingEmpty = true;
-        boolean outEmpty = true;
+        boolean hasFluid = false, search = false;
         for (Slot craftingSlot : this.craftingSlots) {
             final ItemStack crafting = craftingSlot.getStack();
-            if (!crafting.isEmpty()) {
-                craftingEmpty = false;
+            if (crafting.isEmpty()) {
+                continue;
             }
+            search = true;
             if (crafting.getItem() instanceof ItemFluidPacket) {
                 hasFluid = true;
                 break;
             }
         }
+        if (!search) { // search=false -> inputs were empty
+            return false;
+        }
+        // `search` should be true at this point
         for (Slot outputSlot : this.outputSlots) {
             final ItemStack out = outputSlot.getStack();
-            if (!out.isEmpty()) {
-                outEmpty = false;
+            if (out.isEmpty()) {
+                continue;
             }
-            if (out.getItem() instanceof ItemFluidPacket) {
+            search = false;
+            if (hasFluid) {
+                break;
+            } else if (out.getItem() instanceof ItemFluidPacket) {
                 hasFluid = true;
                 break;
             }
         }
-        if (hasFluid && !craftingEmpty && !outEmpty) {
-            encodeFluidPattern();
-            return true;
-        }
-        return false;
+        return hasFluid && !search; // search=true -> outputs were empty
     }
 
     private void encodeFluidPattern() {
-        ItemStack output = this.patternSlotOUT.getStack();
-        if (!output.isEmpty() && !this.isPattern(output)) {
-            return;
-        } else if (output.isEmpty()) {
-            output = this.patternSlotIN.getStack();
-            if (output.isEmpty() || !this.isPattern(output)) {
-                return;
-            }
-            output.setCount(output.getCount() - 1);
-            if (output.getCount() == 0) {
-                this.patternSlotIN.putStack(ItemStack.EMPTY);
-            }
-
-            ItemStack patternStack = new ItemStack(FcItems.DENSE_ENCODED_PATTERN);
-            DensePatternDetails pattern = new DensePatternDetails(patternStack);
-            pattern.setInputs(collectAeInventory(craftingSlots));
-            pattern.setOutputs(collectAeInventory(outputSlots));
-            this.patternSlotOUT.putStack(pattern.writeToStack());
-        }
+        ItemStack patternStack = new ItemStack(FcItems.DENSE_ENCODED_PATTERN);
+        DensePatternDetails pattern = new DensePatternDetails(patternStack);
+        pattern.setInputs(collectInventory(craftingSlots));
+        pattern.setOutputs(collectInventory(outputSlots));
+        patternSlotOUT.putStack(pattern.writeToStack());
     }
 
-    private boolean isPattern(final ItemStack output) {
+    private static boolean isPattern(final ItemStack output) {
         if (output.isEmpty()) {
             return false;
         }
-        final IDefinitions definitions = AEApi.instance().definitions();
-        boolean isPattern = definitions.items().encodedPattern().isSameAs(output);
-        isPattern |= definitions.materials().blankPattern().isSameAs(output);
-        return isPattern;
+        if (output.getItem() instanceof ItemDenseEncodedPattern) {
+            return true;
+        }
+        final IDefinitions defs = AEApi.instance().definitions();
+        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
     }
 
-    private static IAEItemStack[] collectAeInventory(Slot[] slots) {
+    private static IAEItemStack[] collectInventory(Slot[] slots) {
+        // see note at top of DensePatternDetails
         List<IAEItemStack> acc = new ArrayList<>();
         for (Slot slot : slots) {
-            IAEItemStack stack = AEItemStack.fromItemStack(slot.getStack().copy());
-            if (stack != null) {
-                if (stack.getItem() instanceof ItemFluidPacket) {
-                    IAEItemStack dropStack = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(stack));
-                    if (dropStack != null) {
-                        acc.add(dropStack);
-                        continue;
-                    }
-                }
-                acc.add(stack);
+            ItemStack stack = slot.getStack();
+            if (stack.isEmpty()) {
+                continue;
             }
+            if (stack.getItem() instanceof ItemFluidPacket) {
+                IAEItemStack dropStack = ItemFluidDrop.newAeStack(ItemFluidPacket.getFluidStack(stack));
+                if (dropStack != null) {
+                    acc.add(dropStack);
+                    continue;
+                }
+            }
+            IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+            if (aeStack == null) {
+                continue;
+            }
+            acc.add(aeStack);
         }
         return acc.toArray(new IAEItemStack[0]);
     }
+
 }

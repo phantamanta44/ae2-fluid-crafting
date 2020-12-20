@@ -2,6 +2,7 @@ package xyz.phanta.ae2fc.client.gui;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.render.StackSizeRenderer;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,7 +19,6 @@ import xyz.phanta.ae2fc.constant.NameConst;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
 import xyz.phanta.ae2fc.inventory.slot.SlotDense;
 import xyz.phanta.ae2fc.inventory.slot.SlotSingleItem;
-import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.network.CPacketEncodePattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
@@ -34,6 +34,7 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
 
     private final ContainerFluidPatternEncoder cont;
     private final MouseRegionManager mouseRegions = new MouseRegionManager(this);
+    private final StackSizeRenderer stackSizeRenderer = Ae2ReflectClient.getStackSizeRenderer(this);
 
     public GuiFluidPatternEncoder(InventoryPlayer ipl, TileFluidPatternEncoder tile) {
         super(new ContainerFluidPatternEncoder(ipl, tile));
@@ -81,18 +82,11 @@ public class GuiFluidPatternEncoder extends AEBaseGui {
     public void drawSlot(Slot slot) {
         if (slot instanceof SlotDense) {
             IAEItemStack stack = ((SlotDense)slot).getAeStack();
-            if (stack != null && stack.getItem() instanceof ItemFluidPacket) {
-                FluidStack fluid = ItemFluidPacket.getFluidStack(stack);
-                if (fluid != null && fluid.amount > 0) {
-                    FluidRenderUtils.renderFluidIntoGuiCleanly(slot.xPos, slot.yPos, 16, 16, fluid, fluid.amount);
-                    Ae2ReflectClient.getStackSizeRenderer(this)
-                            .renderStackSize(fontRenderer, ItemFluidDrop.newAeStack(fluid), slot.xPos, slot.yPos);
-                    return;
-                }
+            if (FluidRenderUtils.renderFluidPacketIntoGuiSlot(slot, stack, stackSizeRenderer, fontRenderer)) {
+                return;
             }
             super.drawSlot(new SlotSingleItem(slot));
-            Ae2ReflectClient.getStackSizeRenderer(this)
-                    .renderStackSize(fontRenderer, stack, slot.xPos, slot.yPos);
+            stackSizeRenderer.renderStackSize(fontRenderer, stack, slot.xPos, slot.yPos);
         } else {
             super.drawSlot(slot);
         }

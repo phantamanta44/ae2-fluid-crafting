@@ -7,15 +7,18 @@ import appeng.fluids.helper.IFluidInterfaceHost;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
-import xyz.phanta.ae2fc.util.Ae2GuiUtils;
-import xyz.phanta.ae2fc.util.Ae2Reflect;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 
 import java.io.IOException;
 
 public class GuiFluidDualInterface extends GuiFluidInterface {
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private GuiTabButton switchInterface;
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    private GuiTabButton priorityBtn;
 
     public GuiFluidDualInterface(final InventoryPlayer ip, final IFluidInterfaceHost te) {
         super(ip, te);
@@ -24,30 +27,26 @@ public class GuiFluidDualInterface extends GuiFluidInterface {
     @Override
     public void initGui() {
         super.initGui();
-        final ItemStack itemInterface =
-                AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
-        this.switchInterface =
-                new GuiTabButton(this.guiLeft + 133, this.guiTop, itemInterface, itemInterface.getDisplayName(),
-                        this.itemRender);
-        this.buttonList.add(this.switchInterface);
+        ItemStack icon = AEApi.instance().definitions().blocks().iface().maybeStack(1).orElse(ItemStack.EMPTY);
+        switchInterface = new GuiTabButton(guiLeft + 133, guiTop, icon, icon.getDisplayName(), itemRender);
+        buttonList.add(switchInterface);
+        priorityBtn = Ae2ReflectClient.getPriorityButton(this);
     }
 
     @Override
     protected void actionPerformed(final GuiButton btn) throws IOException {
-        if (btn == Ae2ReflectClient.getAeButton(GuiFluidInterface.class, this, "priority")) {
-            Ae2GuiUtils.switchGui(Ae2GuiUtils.MY_PRIORITY);
-            return;
+        if (btn == switchInterface) {
+            InventoryHandler.switchGui(GuiType.DUAL_ITEM_INTERFACE);
+        } else if (btn == priorityBtn) {
+            InventoryHandler.switchGui(GuiType.PRIORITY);
+        } else {
+            super.actionPerformed(btn);
         }
-
-        if (btn == this.switchInterface) {
-            Ae2GuiUtils.switchGui(Ae2GuiUtils.DUAL_ITEM_INTERFACE);
-        }
-
-        super.actionPerformed(btn);
     }
 
     @Override
     protected boolean drawUpgrades() {
         return false;
     }
+
 }

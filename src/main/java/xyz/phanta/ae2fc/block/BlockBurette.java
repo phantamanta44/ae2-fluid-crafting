@@ -8,7 +8,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.tile.TileBurette;
 
 public class BlockBurette extends AEBaseTileBlock {
@@ -27,7 +28,7 @@ public class BlockBurette extends AEBaseTileBlock {
         TileBurette tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
-                player.openGui(Ae2FluidCrafting.INSTANCE, 3, world, pos.getX(), pos.getY(), pos.getZ());
+                InventoryHandler.openGui(player, world, pos, facing, GuiType.PRECISION_BURETTE);
             }
             return true;
         }

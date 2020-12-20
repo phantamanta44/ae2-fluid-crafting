@@ -11,7 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
 
 public class BlockIngredientBuffer extends AEBaseTileBlock {
@@ -32,7 +33,7 @@ public class BlockIngredientBuffer extends AEBaseTileBlock {
         TileIngredientBuffer tile = getTileEntity(world, pos);
         if (tile != null) {
             if (!world.isRemote) {
-                player.openGui(Ae2FluidCrafting.INSTANCE, 2, world, pos.getX(), pos.getY(), pos.getZ());
+                InventoryHandler.openGui(player, world, pos, facing, GuiType.INGREDIENT_BUFFER);
             }
             return true;
         }

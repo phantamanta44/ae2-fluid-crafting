@@ -34,16 +34,33 @@ public class Ae2Reflect {
         }
     }
 
-    private static Method reflectMethod(Class<?> owner, String name, Class<?>... paramTypes) throws NoSuchMethodException {
+    public static Method reflectMethod(Class<?> owner, String name, Class<?>... paramTypes) throws NoSuchMethodException {
         Method m = owner.getDeclaredMethod(name, paramTypes);
         m.setAccessible(true);
         return m;
     }
 
-    private static Field reflectField(Class<?> owner, String name) throws NoSuchFieldException {
+    public static Field reflectField(Class<?> owner, String name) throws NoSuchFieldException {
         Field f = owner.getDeclaredField(name);
         f.setAccessible(true);
         return f;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T readField(Object owner, Field field) {
+        try {
+            return (T)field.get(owner);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to read field: " + field);
+        }
+    }
+
+    public static void writeField(Object owner, Field field, Object value) {
+        try {
+            field.set(owner, value);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to write field: " + field);
+        }
     }
 
     public static void setItemSlotExtractable(ItemSlot slot, boolean extractable) {
@@ -54,45 +71,24 @@ public class Ae2Reflect {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static Map<IItemDefinition, IItemDefinition> getDisassemblyNonCellMap(DisassembleRecipe recipe) {
-        try {
-            return (Map<IItemDefinition, IItemDefinition>)fDisassembleRecipe_nonCellMappings.get(recipe);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to read field: " + fDisassembleRecipe_nonCellMappings, e);
-        }
+        return readField(recipe, fDisassembleRecipe_nonCellMappings);
     }
 
     public static SlotFakeCraftingMatrix[] getCraftingSlots(ContainerPatternTerm cont) {
-        try {
-            return (SlotFakeCraftingMatrix[])fContainerPatternTerm_craftingSlots.get(cont);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to read field: " + fContainerPatternTerm_craftingSlots, e);
-        }
+        return readField(cont, fContainerPatternTerm_craftingSlots);
     }
     
     public static OptionalSlotFake[] getOutputSlots(ContainerPatternTerm cont) {
-        try {
-            return (OptionalSlotFake[])fContainerPatternTerm_outputSlots.get(cont);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to read field: " + fContainerPatternTerm_outputSlots, e);
-        }
+        return readField(cont, fContainerPatternTerm_outputSlots);
     }
     
     public static SlotRestrictedInput getPatternSlotIn(ContainerPatternTerm cont) {
-        try {
-            return (SlotRestrictedInput)fContainerPatternTerm_patternSlotIN.get(cont);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to read field: " + fContainerPatternTerm_patternSlotIN, e);
-        }
+        return readField(cont, fContainerPatternTerm_patternSlotIN);
     }
     
     public static SlotRestrictedInput getPatternSlotOut(ContainerPatternTerm cont) {
-        try {
-            return (SlotRestrictedInput)fContainerPatternTerm_patternSlotOUT.get(cont);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to read field: " + fContainerPatternTerm_patternSlotOUT, e);
-        }
+        return readField(cont, fContainerPatternTerm_patternSlotOUT);
     }
 
 }

@@ -7,15 +7,18 @@ import appeng.helpers.IInterfaceHost;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import xyz.phanta.ae2fc.client.util.Ae2ReflectClient;
-import xyz.phanta.ae2fc.util.Ae2GuiUtils;
-import xyz.phanta.ae2fc.util.Ae2Reflect;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 
 import java.io.IOException;
 
 public class GuiItemDualInterface extends GuiInterface {
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private GuiTabButton switchInterface;
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    private GuiTabButton priorityBtn;
 
     public GuiItemDualInterface(final InventoryPlayer inventoryPlayer, final IInterfaceHost te) {
         super(inventoryPlayer, te);
@@ -24,12 +27,10 @@ public class GuiItemDualInterface extends GuiInterface {
     @Override
     protected void addButtons() {
         super.addButtons();
-        final ItemStack fluidInterface =
-                AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
-        this.switchInterface =
-                new GuiTabButton(this.guiLeft + 133, this.guiTop, fluidInterface, fluidInterface.getDisplayName(),
-                        this.itemRender);
-        this.buttonList.add(this.switchInterface);
+        ItemStack icon = AEApi.instance().definitions().blocks().fluidIface().maybeStack(1).orElse(ItemStack.EMPTY);
+        switchInterface = new GuiTabButton(guiLeft + 133, guiTop, icon, icon.getDisplayName(), itemRender);
+        buttonList.add(switchInterface);
+        priorityBtn = Ae2ReflectClient.getPriorityButton(this);
     }
 
     @Override
@@ -39,15 +40,13 @@ public class GuiItemDualInterface extends GuiInterface {
 
     @Override
     protected void actionPerformed(final GuiButton btn) throws IOException {
-        if (btn == Ae2ReflectClient.getAeButton(GuiInterface.class, this, "priority")) {
-            Ae2GuiUtils.switchGui(Ae2GuiUtils.MY_PRIORITY);
-            return;
+        if (btn == switchInterface) {
+            InventoryHandler.switchGui(GuiType.DUAL_FLUID_INTERFACE);
+        } else if (btn == priorityBtn) {
+            InventoryHandler.switchGui(GuiType.PRIORITY);
+        } else {
+            super.actionPerformed(btn);
         }
-
-        if (btn == this.switchInterface) {
-            Ae2GuiUtils.switchGui(Ae2GuiUtils.DUAL_FLUID_INTERFACE);
-        }
-
-        super.actionPerformed(btn);
     }
+
 }

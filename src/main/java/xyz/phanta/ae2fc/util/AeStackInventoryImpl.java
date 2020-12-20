@@ -9,7 +9,9 @@ import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.core.util.ObjectArrayIterator;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class AeStackInventoryImpl<T extends IAEStack<T>> implements AeStackInventory<T> {
 
@@ -51,6 +53,11 @@ public class AeStackInventoryImpl<T extends IAEStack<T>> implements AeStackInven
     @Override
     public Iterator<T> iterator() {
         return new ObjectArrayIterator<>(inv);
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return Arrays.stream(inv);
     }
 
     public void writeToNbt(NBTTagCompound tag) {

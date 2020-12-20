@@ -1,16 +1,23 @@
 package xyz.phanta.ae2fc.client.util;
 
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.client.render.StackSizeRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import xyz.phanta.ae2fc.item.ItemFluidDrop;
+import xyz.phanta.ae2fc.item.ItemFluidPacket;
 
 import javax.annotation.Nullable;
 
@@ -93,6 +100,28 @@ public class FluidRenderUtils {
         Tessellator tess = Tessellator.getInstance();
         renderFluidIntoGui(tess, tess.getBuffer(), x, y, width, height, fluidStack, capacity);
         GlStateManager.color(1F, 1F, 1F, 1F);
+    }
+
+    public static boolean renderFluidIntoGuiSlot(Slot slot, @Nullable FluidStack fluid,
+                                                 StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+        if (fluid == null || fluid.amount <= 0) {
+            return false;
+        }
+        renderFluidIntoGuiCleanly(slot.xPos, slot.yPos, 16, 16, fluid, fluid.amount);
+        stackSizeRenderer.renderStackSize(fontRenderer, ItemFluidDrop.newAeStack(fluid), slot.xPos, slot.yPos);
+        return true;
+    }
+
+    public static boolean renderFluidPacketIntoGuiSlot(Slot slot, @Nullable IAEItemStack stack,
+                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+        return stack != null && stack.getItem() instanceof ItemFluidPacket
+                && renderFluidIntoGuiSlot(slot, ItemFluidPacket.getFluidStack(stack), stackSizeRenderer, fontRenderer);
+    }
+
+    public static boolean renderFluidPacketIntoGuiSlot(Slot slot, ItemStack stack,
+                                                       StackSizeRenderer stackSizeRenderer, FontRenderer fontRenderer) {
+        return !stack.isEmpty() && stack.getItem() instanceof ItemFluidPacket
+                && renderFluidIntoGuiSlot(slot, ItemFluidPacket.getFluidStack(stack), stackSizeRenderer, fontRenderer);
     }
 
 }
