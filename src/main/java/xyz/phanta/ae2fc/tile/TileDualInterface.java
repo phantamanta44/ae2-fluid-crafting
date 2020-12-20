@@ -17,12 +17,10 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import appeng.api.util.IConfigManager;
-import appeng.core.sync.GuiBridge;
 import appeng.fluids.helper.DualityFluidInterface;
 import appeng.fluids.helper.IFluidInterfaceHost;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
-import appeng.helpers.IPriorityHost;
 import appeng.tile.grid.AENetworkInvTile;
 import appeng.util.Platform;
 import appeng.util.inv.IInventoryDestination;
@@ -39,7 +37,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.init.FcBlocks;
-import xyz.phanta.ae2fc.util.Ae2GuiUtils;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.tile.base.FcPriorityHost;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -47,7 +46,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class TileDualInterface extends AENetworkInvTile
-        implements IGridTickable, IInventoryDestination, IInterfaceHost, IPriorityHost, IFluidInterfaceHost {
+        implements IGridTickable, IInventoryDestination, IInterfaceHost, FcPriorityHost, IFluidInterfaceHost {
+
     public TileDualInterface() {
         super();
     }
@@ -324,7 +324,8 @@ public class TileDualInterface extends AENetworkInvTile
     }
 
     @Override
-    public GuiBridge getGuiBridge() {
-        return GuiBridge.values()[Ae2GuiUtils.DUAL_ITEM_INTERFACE.ordinal()];
+    public GuiType getGuiType() {
+        return GuiType.DUAL_ITEM_INTERFACE;
     }
+
 }

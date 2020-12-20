@@ -14,11 +14,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
-import xyz.phanta.ae2fc.util.Ae2GuiUtils;
 
 import javax.annotation.Nonnull;
 
@@ -41,18 +43,19 @@ public class PartFluidPatternTerminal extends PartPatternTerminal {
     @Nonnull
     @Override
     public IPartModel getStaticModels() {
-        return this.selectModel( MODELS_OFF, MODELS_ON, MODELS_HAS_CHANNEL );
+        return this.selectModel(MODELS_OFF, MODELS_ON, MODELS_HAS_CHANNEL);
     }
 
     @Override
     public boolean onPartActivate(final EntityPlayer player, final EnumHand hand, final Vec3d pos) {
         TileEntity te = this.getTile();
-        if (Platform.isWrench(player, player.inventory.getCurrentItem(), te.getPos())) {
+        BlockPos tePos = te.getPos();
+        if (Platform.isWrench(player, player.inventory.getCurrentItem(), tePos)) {
             return super.onPartActivate(player, hand, pos);
         }
         if (Platform.isServer()) {
-            if (Ae2GuiUtils.FLUID_PATTERN_TERMINAL.hasPermissions(te, this.getSide(), player)) {
-                Ae2GuiUtils.openGui(player, te, Ae2GuiUtils.FLUID_PATTERN_TERMINAL, this.getSide());
+            if (GuiBridge.GUI_PATTERN_TERMINAL.hasPermissions(te, tePos.getX(), tePos.getY(), tePos.getZ(), getSide(), player)) {
+                InventoryHandler.openGui(player, te.getWorld(), tePos, getSide().getFacing(), GuiType.FLUID_PATTERN_TERMINAL);
             } else {
                 Platform.openGUI(player, this.getHost().getTile(), this.getSide(), GuiBridge.GUI_ME);
             }
@@ -78,13 +81,13 @@ public class PartFluidPatternTerminal extends PartPatternTerminal {
         if (crafting instanceof AppEngInternalInventory && output instanceof AppEngInternalInventory) {
             for (int x = 0; x < crafting.getSlots() && x < newCrafting.length; x++) {
                 final IAEItemStack item = newCrafting[x];
-                ((AppEngInternalInventory) crafting)
+                ((AppEngInternalInventory)crafting)
                         .setStackInSlot(x, item == null ? ItemStack.EMPTY : item.createItemStack());
             }
 
             for (int x = 0; x < output.getSlots() && x < newOutput.length; x++) {
                 final IAEItemStack item = newOutput[x];
-                ((AppEngInternalInventory) output)
+                ((AppEngInternalInventory)output)
                         .setStackInSlot(x, item == null ? ItemStack.EMPTY : item.createItemStack());
             }
         }

@@ -17,12 +17,10 @@ import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
-import appeng.core.sync.GuiBridge;
 import appeng.fluids.helper.DualityFluidInterface;
 import appeng.fluids.helper.IFluidInterfaceHost;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
-import appeng.helpers.IPriorityHost;
 import appeng.helpers.Reflected;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartBasicState;
@@ -45,15 +43,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.init.FcItems;
-import xyz.phanta.ae2fc.util.Ae2GuiUtils;
+import xyz.phanta.ae2fc.inventory.GuiType;
+import xyz.phanta.ae2fc.inventory.InventoryHandler;
+import xyz.phanta.ae2fc.tile.base.FcPriorityHost;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.List;
 
 public class PartDualInterface extends PartBasicState
-        implements IGridTickable, IInventoryDestination, IInterfaceHost, IAEAppEngInventory, IPriorityHost,
-        IFluidInterfaceHost {
+        implements IGridTickable, IInventoryDestination, IInterfaceHost, IAEAppEngInventory, FcPriorityHost, IFluidInterfaceHost {
 
     @PartModels
     public static ResourceLocation[] MODELS = new ResourceLocation[] {
@@ -151,7 +150,8 @@ public class PartDualInterface extends PartBasicState
     @Override
     public boolean onPartActivate(final EntityPlayer p, final EnumHand hand, final Vec3d pos) {
         if (Platform.isServer()) {
-            Ae2GuiUtils.openGui(p, this.getTileEntity(), Ae2GuiUtils.DUAL_ITEM_INTERFACE, this.getSide());
+            TileEntity tile = getTileEntity();
+            InventoryHandler.openGui(p, tile.getWorld(), tile.getPos(), getSide().getFacing(), GuiType.DUAL_ITEM_INTERFACE);
         }
         return true;
     }
@@ -274,8 +274,8 @@ public class PartDualInterface extends PartBasicState
     }
 
     @Override
-    public GuiBridge getGuiBridge() {
-        return GuiBridge.values()[Ae2GuiUtils.DUAL_ITEM_INTERFACE.ordinal()];
+    public GuiType getGuiType() {
+        return GuiType.DUAL_ITEM_INTERFACE;
     }
 
     @Override
