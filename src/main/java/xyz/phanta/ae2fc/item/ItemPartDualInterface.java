@@ -15,14 +15,15 @@ import xyz.phanta.ae2fc.parts.PartDualInterface;
 
 import javax.annotation.Nullable;
 
-public class ItemPartDualInterface extends Item implements IPartItem {
+public class ItemPartDualInterface extends Item implements IPartItem<PartDualInterface> {
+
     public ItemPartDualInterface() {
         this.setMaxStackSize(64);
     }
 
     @Nullable
     @Override
-    public IPart createPartFromItemStack(ItemStack is) {
+    public PartDualInterface createPartFromItemStack(ItemStack is) {
         return new PartDualInterface(is);
     }
 
@@ -31,4 +32,5 @@ public class ItemPartDualInterface extends Item implements IPartItem {
                                       float hitX, float hitY, float hitZ) {
         return AEApi.instance().partHelper().placeBus(player.getHeldItem(hand), pos, side, player, hand, world);
     }
+
 }
