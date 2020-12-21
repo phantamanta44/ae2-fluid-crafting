@@ -1,19 +1,13 @@
 package xyz.phanta.ae2fc.network;
 
 import appeng.api.storage.data.IAEItemStack;
-import appeng.fluids.container.ContainerFluidTerminal;
-import appeng.util.inv.InvOperation;
 import appeng.util.item.AEItemStack;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
-import xyz.phanta.ae2fc.inventory.ContainerFluidPatternTerminal;
-import xyz.phanta.ae2fc.parts.PartFluidPatternTerminal;
-import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
-import xyz.phanta.ae2fc.util.AeStackInventory;
+import xyz.phanta.ae2fc.inventory.base.PatternConsumer;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -82,29 +76,13 @@ public class CPacketLoadPattern implements IMessage {
         public IMessage onMessage(CPacketLoadPattern message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                if (player.openContainer instanceof ContainerFluidPatternEncoder) {
-                    TileFluidPatternEncoder tile = ((ContainerFluidPatternEncoder)player.openContainer).getTile();
-                    copyStacks(message.crafting, tile.getCraftingSlots());
-                    copyStacks(message.output, tile.getOutputSlots());
-                }
-                if (player.openContainer instanceof ContainerFluidPatternTerminal) {
-                    if (((ContainerFluidPatternTerminal) player.openContainer).getPatternTerminal() instanceof PartFluidPatternTerminal) {
-                        PartFluidPatternTerminal tile =
-                                (PartFluidPatternTerminal) ((ContainerFluidPatternTerminal) player.openContainer).getPatternTerminal();
-                        tile.onChangeCrafting(message.crafting, message.output);
-                    }
+                if (player.openContainer instanceof PatternConsumer) {
+                    ((PatternConsumer)player.openContainer).acceptPattern(message.crafting, message.output);
                 }
             });
             return null;
         }
 
-    }
-
-    private static void copyStacks(IAEItemStack[] src, AeStackInventory<IAEItemStack> dest) {
-        int bound = Math.min(src.length, dest.getSlotCount());
-        for (int i = 0; i < bound; i++) {
-            dest.setStack(i, src[i]);
-        }
     }
 
 }

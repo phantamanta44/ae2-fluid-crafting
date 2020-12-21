@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.ItemHandlerHelper;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.inventory.base.PatternConsumer;
 import xyz.phanta.ae2fc.inventory.slot.SlotDense;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ContainerFluidPatternEncoder extends AEBaseContainer {
+public class ContainerFluidPatternEncoder extends AEBaseContainer implements PatternConsumer {
 
     private final TileFluidPatternEncoder tile;
 
@@ -150,6 +151,19 @@ public class ContainerFluidPatternEncoder extends AEBaseContainer {
             }
         } else {
             super.doAction(player, action, slotId, id);
+        }
+    }
+
+    @Override
+    public void acceptPattern(IAEItemStack[] inputs, IAEItemStack[] outputs) {
+        copyStacks(inputs, tile.getCraftingSlots());
+        copyStacks(outputs, tile.getOutputSlots());
+    }
+
+    private static void copyStacks(IAEItemStack[] src, AeStackInventory<IAEItemStack> dest) {
+        int bound = Math.min(src.length, dest.getSlotCount());
+        for (int i = 0; i < bound; i++) {
+            dest.setStack(i, src[i]);
         }
     }
 

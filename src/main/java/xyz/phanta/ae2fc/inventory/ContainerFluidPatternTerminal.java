@@ -10,16 +10,18 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.inventory.base.PatternConsumer;
 import xyz.phanta.ae2fc.item.ItemDenseEncodedPattern;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
+import xyz.phanta.ae2fc.parts.PartFluidPatternTerminal;
 import xyz.phanta.ae2fc.util.Ae2Reflect;
 import xyz.phanta.ae2fc.util.DensePatternDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
+public class ContainerFluidPatternTerminal extends ContainerPatternTerm implements PatternConsumer {
 
     private final Slot[] craftingSlots;
     private final Slot[] outputSlots;
@@ -55,6 +57,17 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
         } else if (isPattern(stack)) {
             encodeFluidPattern();
         }
+    }
+
+    private static boolean isPattern(final ItemStack output) {
+        if (output.isEmpty()) {
+            return false;
+        }
+        if (output.getItem() instanceof ItemDenseEncodedPattern) {
+            return true;
+        }
+        final IDefinitions defs = AEApi.instance().definitions();
+        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
     }
 
     private boolean checkHasFluidPattern() {
@@ -101,17 +114,6 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
         patternSlotOUT.putStack(pattern.writeToStack());
     }
 
-    private static boolean isPattern(final ItemStack output) {
-        if (output.isEmpty()) {
-            return false;
-        }
-        if (output.getItem() instanceof ItemDenseEncodedPattern) {
-            return true;
-        }
-        final IDefinitions defs = AEApi.instance().definitions();
-        return defs.items().encodedPattern().isSameAs(output) || defs.materials().blankPattern().isSameAs(output);
-    }
-
     private static IAEItemStack[] collectInventory(Slot[] slots) {
         // see note at top of DensePatternDetails
         List<IAEItemStack> acc = new ArrayList<>();
@@ -134,6 +136,13 @@ public class ContainerFluidPatternTerminal extends ContainerPatternTerm {
             acc.add(aeStack);
         }
         return acc.toArray(new IAEItemStack[0]);
+    }
+
+    @Override
+    public void acceptPattern(IAEItemStack[] inputs, IAEItemStack[] outputs) {
+        if (getPatternTerminal() instanceof PartFluidPatternTerminal) {
+            ((PartFluidPatternTerminal)getPatternTerminal()).onChangeCrafting(inputs, outputs);
+        }
     }
 
 }
