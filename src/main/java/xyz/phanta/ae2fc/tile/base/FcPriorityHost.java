@@ -10,7 +10,7 @@ public interface FcPriorityHost extends IPriorityHost {
 
     @Override
     default GuiBridge getGuiBridge() {
-        throw new UnsupportedOperationException();
+        return GuiBridge.GUI_Handler;
     }
 
 }

@@ -3,6 +3,9 @@ package xyz.phanta.ae2fc.inventory;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.ITerminalHost;
+import appeng.api.util.AEPartLocation;
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftingStatus;
 import appeng.container.implementations.ContainerInterface;
 import appeng.container.implementations.ContainerPriority;
@@ -183,7 +186,20 @@ public enum GuiType {
                 return null;
             }
             T inv = getInventory(tile, face);
-            return inv != null ? createServerGui(player, inv) : null;
+            if (inv == null) {
+                return null;
+            }
+            Object gui = createServerGui(player, inv);
+            if (gui instanceof AEBaseContainer) {
+                ContainerOpenContext ctx = new ContainerOpenContext(inv);
+                ctx.setWorld(world);
+                ctx.setX(x);
+                ctx.setY(y);
+                ctx.setZ(z);
+                ctx.setSide(AEPartLocation.fromFacing(face));
+                ((AEBaseContainer)gui).setOpenContext(ctx);
+            }
+            return gui;
         }
 
         @Nullable
