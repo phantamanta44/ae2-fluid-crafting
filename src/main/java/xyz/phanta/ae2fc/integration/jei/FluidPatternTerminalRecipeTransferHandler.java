@@ -28,10 +28,10 @@ public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransfe
     public IRecipeTransferError transferRecipe(ContainerFluidPatternTerminal container, IRecipeLayout recipeLayout,
                                                EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (container.craftingMode) {
-            if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+            if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
                 return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_PROCESSING_RECIPE_ONLY));
             }
-        } else if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+        } else if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
             return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_CRAFTING_RECIPE_ONLY));
         }
         if (doTransfer && container.getPatternTerminal() instanceof PartFluidPatternTerminal) {
