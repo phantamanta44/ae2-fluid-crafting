@@ -66,7 +66,4 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
-
-    // copy access transformers
-    rename '.+_at\\.cfg', 'META-INF/$0'
 }
