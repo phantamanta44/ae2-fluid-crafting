@@ -39,38 +39,45 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
             TileFluidPatternEncoder tile = container.getTile();
             IAEItemStack[] crafting = new IAEItemStack[tile.getCraftingSlots().getSlotCount()];
             IAEItemStack[] output = new IAEItemStack[tile.getOutputSlots().getSlotCount()];
-            int ndxCrafting = 0, ndxOutput = 0;
-            for (IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
-                if (ing.isInput()) {
-                    if (ndxCrafting < crafting.length) {
-                        ItemStack stack = ing.getDisplayedIngredient();
-                        if (stack != null) {
-                            crafting[ndxCrafting++] = AEItemStack.fromItemStack(stack);
-                        }
-                    }
-                } else {
-                    if (ndxOutput < output.length) {
-                        ItemStack stack = ing.getDisplayedIngredient();
-                        if (stack != null) {
-                            output[ndxOutput++] = AEItemStack.fromItemStack(stack);
-                        }
-                    }
-                }
-            }
-            for (IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
-                if (ing.isInput()) {
-                    if (ndxCrafting < crafting.length) {
-                        crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
-                    }
-                } else {
-                    if (ndxOutput < output.length) {
-                        output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
-                    }
-                }
-            }
+            transferRecipeSlots(recipeLayout, crafting, output, false);
             Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketLoadPattern(crafting, output));
         }
         return null;
+    }
+
+    public static void transferRecipeSlots(IRecipeLayout recipeLayout, IAEItemStack[] crafting, IAEItemStack[] output,
+                                           boolean retainEmptyInputs) {
+        int ndxCrafting = 0, ndxOutput = 0;
+        for (IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
+            if (ing.isInput()) {
+                if (ndxCrafting < crafting.length) {
+                    ItemStack stack = ing.getDisplayedIngredient();
+                    if (stack != null) {
+                        crafting[ndxCrafting++] = AEItemStack.fromItemStack(stack);
+                    } else if (retainEmptyInputs) {
+                        crafting[ndxCrafting++] = null;
+                    }
+                }
+            } else {
+                if (ndxOutput < output.length) {
+                    ItemStack stack = ing.getDisplayedIngredient();
+                    if (stack != null) {
+                        output[ndxOutput++] = AEItemStack.fromItemStack(stack);
+                    }
+                }
+            }
+        }
+        for (IGuiIngredient<FluidStack> ing : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
+            if (ing.isInput()) {
+                if (ndxCrafting < crafting.length) {
+                    crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
+                }
+            } else {
+                if (ndxOutput < output.length) {
+                    output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
+                }
+            }
+        }
     }
 
 }
