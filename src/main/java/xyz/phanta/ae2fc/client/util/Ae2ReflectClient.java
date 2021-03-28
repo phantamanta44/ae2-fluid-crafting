@@ -24,6 +24,7 @@ public class Ae2ReflectClient {
     private static final Field fGuiCraftingStatus_originalGuiBtn;
     private static final Field fGuiPatternTerm_container;
     private static final Field fGuiMEMonitorable_monitorableContainer;
+    private static final Field fGuiMEMonitorable_configSrc;
     private static final Field fGuiMEMonitorable_craftingStatusBtn;
     private static final Field fGuiInterface_priority;
     private static final Field fGuiFluidInterface_priority;
@@ -39,6 +40,7 @@ public class Ae2ReflectClient {
             fGuiCraftingStatus_originalGuiBtn = Ae2Reflect.reflectField(GuiCraftingStatus.class, "originalGuiBtn");
             fGuiPatternTerm_container = Ae2Reflect.reflectField(GuiPatternTerm.class, "container");
             fGuiMEMonitorable_monitorableContainer = Ae2Reflect.reflectField(GuiMEMonitorable.class, "monitorableContainer");
+            fGuiMEMonitorable_configSrc = Ae2Reflect.reflectField(GuiMEMonitorable.class, "configSrc");
             fGuiMEMonitorable_craftingStatusBtn = Ae2Reflect.reflectField(GuiMEMonitorable.class, "craftingStatusBtn");
             fGuiInterface_priority = Ae2Reflect.reflectField(GuiInterface.class, "priority");
             fGuiFluidInterface_priority = Ae2Reflect.reflectField(GuiFluidInterface.class, "priority");
@@ -71,6 +73,7 @@ public class Ae2ReflectClient {
     public static void setGuiContainer(GuiPatternTerm instance, ContainerFluidPatternTerminal container) {
         Ae2Reflect.writeField(instance, fGuiPatternTerm_container, container);
         Ae2Reflect.writeField(instance, fGuiMEMonitorable_monitorableContainer, container);
+        Ae2Reflect.writeField(instance, fGuiMEMonitorable_configSrc, container.getConfigManager());
     }
 
     public static GuiTabButton getCraftingStatusButton(GuiMEMonitorable gui) {

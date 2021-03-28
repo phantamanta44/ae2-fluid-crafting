@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 public class Ae2FluidCrafting {
 
     public static final String MOD_ID = "ae2fc";
-    public static final String VERSION = "1.0.9";
+    public static final String VERSION = "1.0.10";
 
     @Mod.Instance(MOD_ID)
     public static Ae2FluidCrafting INSTANCE;
