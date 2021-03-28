@@ -42,12 +42,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
+import xyz.phanta.ae2fc.component.DualityDualInterface;
 import xyz.phanta.ae2fc.init.FcItems;
 import xyz.phanta.ae2fc.inventory.GuiType;
 import xyz.phanta.ae2fc.inventory.InventoryHandler;
 import xyz.phanta.ae2fc.tile.base.FcPriorityHost;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -66,8 +68,7 @@ public class PartDualInterface extends PartBasicState
     public static final PartModel MODELS_ON = new PartModel(MODELS[0], MODELS[1]);
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS[0], MODELS[3]);
 
-    private final DualityFluidInterface fluidDuality = new DualityFluidInterface(this.getProxy(), this);
-    private final DualityInterface itemDuality = new DualityInterface(this.getProxy(), this);
+    private final DualityDualInterface<PartDualInterface> duality = new DualityDualInterface<>(getProxy(), this);
 
     @Reflected
     public PartDualInterface(final ItemStack is) {
@@ -76,14 +77,12 @@ public class PartDualInterface extends PartBasicState
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkChannelsChanged c) {
-        this.itemDuality.gridChanged();
-        this.fluidDuality.gridChanged();
+        duality.onChannelStateChange(c);
     }
 
     @MENetworkEventSubscribe
     public void stateChange(final MENetworkPowerStatusChange c) {
-        this.itemDuality.gridChanged();
-        this.fluidDuality.gridChanged();
+        duality.onPowerStateChange(c);
     }
 
     @Override
@@ -94,42 +93,35 @@ public class PartDualInterface extends PartBasicState
 
     @Override
     public int getInstalledUpgrades(final Upgrades u) {
-        return this.itemDuality.getInstalledUpgrades(u);
+        return duality.getInstalledUpgrades(u);
     }
 
     @Override
     public void gridChanged() {
-        this.itemDuality.gridChanged();
-        this.fluidDuality.gridChanged();
+        duality.onGridChanged();
     }
 
     @Override
     public void readFromNBT(final NBTTagCompound data) {
         super.readFromNBT(data);
-        this.itemDuality.readFromNBT(data.getCompoundTag("itemDuality"));
-        this.fluidDuality.readFromNBT(data.getCompoundTag("fluidDuality"));
+        duality.readFromNBT(data);
     }
 
     @Override
     public void writeToNBT(final NBTTagCompound data) {
         super.writeToNBT(data);
-        NBTTagCompound itemDuality = new NBTTagCompound();
-        NBTTagCompound fluidDuality = new NBTTagCompound();
-        this.itemDuality.writeToNBT(itemDuality);
-        this.fluidDuality.writeToNBT(fluidDuality);
-        data.setTag("itemDuality", itemDuality);
-        data.setTag("fluidDuality", fluidDuality);
+        duality.writeToNBT(data);
     }
 
     @Override
     public void addToWorld() {
         super.addToWorld();
-        this.itemDuality.initialize();
+        duality.initialize();
     }
 
     @Override
     public void getDrops(final List<ItemStack> drops, final boolean wrenched) {
-        this.itemDuality.addDrops(drops);
+        duality.addDrops(drops);
     }
 
     @Override
@@ -139,12 +131,12 @@ public class PartDualInterface extends PartBasicState
 
     @Override
     public IConfigManager getConfigManager() {
-        return this.itemDuality.getConfigManager();
+        return duality.getConfigManager();
     }
 
     @Override
     public IItemHandler getInventoryByName(final String name) {
-        return this.itemDuality.getInventoryByName(name);
+        return duality.getItemInventoryByName(name);
     }
 
     @Override
@@ -158,51 +150,33 @@ public class PartDualInterface extends PartBasicState
 
     @Override
     public boolean canInsert(final ItemStack stack) {
-        return this.itemDuality.canInsert(stack);
+        return duality.canInsertItem(stack);
     }
-
-//    @Override
-//    public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel )
-//    {
-//        return this.item_duality.getInventory( channel );
-//    }
 
     @Override
     public TickingRequest getTickingRequest(final IGridNode node) {
-        TickingRequest item = this.itemDuality.getTickingRequest(node);
-        TickingRequest fluid = this.fluidDuality.getTickingRequest(node);
-        return new TickingRequest(Math.min(item.minTickRate, fluid.minTickRate),
-                Math.max(item.maxTickRate, fluid.maxTickRate), item.isSleeping == fluid.isSleeping && item.isSleeping,
-                true);
+        return duality.getTickingRequest(node);
     }
 
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall) {
-        TickRateModulation item = this.itemDuality.tickingRequest(node, ticksSinceLastCall);
-        TickRateModulation fluid = this.fluidDuality.tickingRequest(node, ticksSinceLastCall);
-        if (item == fluid) {
-            return item;
-        }
-        if (item == TickRateModulation.SLOWER || fluid == TickRateModulation.SLOWER) {
-            return TickRateModulation.SLOWER;
-        }
-        return TickRateModulation.URGENT;
+        return duality.onTick(node, ticksSinceLastCall);
     }
 
     @Override
     public void onChangeInventory(final IItemHandler inv, final int slot, final InvOperation mc,
                                   final ItemStack removedStack, final ItemStack newStack) {
-        this.itemDuality.onChangeInventory(inv, slot, mc, removedStack, newStack);
+        duality.onItemInventoryChange(inv, slot, mc, removedStack, newStack);
     }
 
     @Override
     public DualityInterface getInterfaceDuality() {
-        return this.itemDuality;
+        return duality.getItemInterface();
     }
 
     @Override
     public DualityFluidInterface getDualityFluidInterface() {
-        return this.fluidDuality;
+        return duality.getFluidInterface();
     }
 
     @Override
@@ -217,60 +191,53 @@ public class PartDualInterface extends PartBasicState
 
     @Override
     public boolean pushPattern(final ICraftingPatternDetails patternDetails, final InventoryCrafting table) {
-        return this.itemDuality.pushPattern(patternDetails, table);
+        return duality.pushPattern(patternDetails, table);
     }
 
     @Override
     public boolean isBusy() {
-        return this.itemDuality.isBusy();
+        return duality.isCraftingBusy();
     }
 
     @Override
     public void provideCrafting(final ICraftingProviderHelper craftingTracker) {
-        this.itemDuality.provideCrafting(craftingTracker);
+        duality.provideCrafting(craftingTracker);
     }
 
     @Override
     public ImmutableSet<ICraftingLink> getRequestedJobs() {
-        return this.itemDuality.getRequestedJobs();
+        return duality.getRequestCraftingJobs();
     }
 
     @Override
     public IAEItemStack injectCraftedItems(final ICraftingLink link, final IAEItemStack items, final Actionable mode) {
-        return this.itemDuality.injectCraftedItems(link, items, mode);
+        return duality.injectCraftedItems(link, items, mode);
     }
 
     @Override
     public void jobStateChange(final ICraftingLink link) {
-        this.itemDuality.jobStateChange(link);
+        duality.onCraftingJobStateChange(link);
     }
 
     @Override
     public int getPriority() {
-        return this.itemDuality.getPriority();
+        return duality.getPriority();
     }
 
     @Override
     public void setPriority(final int newValue) {
-        this.itemDuality.setPriority(newValue);
+        duality.setPriority(newValue);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capabilityClass) {
-        EnumFacing facing = this.getSide().getFacing();
-        return this.itemDuality.hasCapability(capabilityClass, facing)
-                || this.fluidDuality.hasCapability(capabilityClass, facing);
+        return duality.hasCapability(capabilityClass, getSide().getFacing());
     }
 
+    @Nullable
     @Override
     public <T> T getCapability(Capability<T> capabilityClass) {
-        EnumFacing facing = this.getSide().getFacing();
-        T result = this.itemDuality.getCapability(capabilityClass, facing);
-        if (result != null) {
-            return result;
-        }
-        result = this.fluidDuality.getCapability(capabilityClass, facing);
-        return result;
+        return duality.getCapability(capabilityClass, getSide().getFacing());
     }
 
     @Override
@@ -294,4 +261,5 @@ public class PartDualInterface extends PartBasicState
             return MODELS_OFF;
         }
     }
+
 }
