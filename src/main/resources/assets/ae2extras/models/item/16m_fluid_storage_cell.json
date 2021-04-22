@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "ae2extras:item/16m_fluid_storage_cell"
+  }
+}

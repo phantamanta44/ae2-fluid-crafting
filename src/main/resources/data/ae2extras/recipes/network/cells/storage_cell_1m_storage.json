@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "ae2extras:1m_storage_cell"
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "appliedenergistics2:empty_storage_cell"
+    },
+    {
+      "item": "ae2extras:1m_cell_component"
+    }
+  ]
+}

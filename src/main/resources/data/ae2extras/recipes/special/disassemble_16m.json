@@ -1,0 +1,11 @@
+{
+  "type": "ae2extras:disassemble",
+  "ingredients": [
+    {
+      "item": "ae2extras:16m_crafting_storage"
+    }
+  ],
+  "result": {
+    "item": "ae2extras:16m_cell_component"
+  }
+}

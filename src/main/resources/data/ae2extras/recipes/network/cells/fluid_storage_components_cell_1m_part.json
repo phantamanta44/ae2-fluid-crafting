@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "ae2extras:1m_fluid_cell_component"
+  },
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["aba", "cdc", "aca"],
+  "key": {
+    "d": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "a": {
+      "tag": "forge:dyes/green"
+    },
+    "c": {
+      "item": "ae2extras:256k_fluid_cell_component"
+    },
+    "b": {
+      "item": "appliedenergistics2:calculation_processor"
+    }
+  }
+}

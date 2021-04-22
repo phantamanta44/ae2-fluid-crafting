@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "ae2extras:block/crafting/1m_storage"
+    },
+    "formed=true": {
+      "model": "ae2extras:block/crafting/1m_storage_formed"
+    }
+  }
+}
