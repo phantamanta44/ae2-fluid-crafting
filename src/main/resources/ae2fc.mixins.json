@@ -2,13 +2,10 @@
   "required": true,
   "package": "xyz.phanta.ae2fc.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "ae2extras.refmap.json",
+  "refmap": "ae2fc.refmap.json",
   "mixins": [
-    "CraftingStorageBlockEntityMixin",
-    "CraftingUnitTypeMixin"
   ],
   "client": [
-    "CraftingCubeModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
