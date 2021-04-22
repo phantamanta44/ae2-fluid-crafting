@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "ae2extras:block/crafting/4m_storage"
-  }
-}

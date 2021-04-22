@@ -14,11 +14,11 @@ license="Unlicense"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="ae2extras" #mandatory
+modId="ae2fc" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="AE2 Extras" #mandatory
+displayName="AE2 Fluid Crafting" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -31,9 +31,9 @@ displayName="AE2 Extras" #mandatory
 authors="Tfarecnim" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Helpful ae2 stuff
+ae2 fluid crafting support
 '''
-[[dependencies.ae2extras]] #optional
+[[dependencies.ae2fc]] #optional
 # the modid of the dependency
 modId="appliedenergistics2" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified

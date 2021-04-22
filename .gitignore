@@ -11,9 +11,9 @@
 
 # Gradle stuff
 /.gradle/
-gradle.properties
 
 # MinecraftForge
 /eclipse/
 /run/
 /libs/
+/logs/
