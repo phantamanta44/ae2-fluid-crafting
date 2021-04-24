@@ -1,11 +1,14 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://jitpack.io" }
         maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = "http://maven.minecraftforge.net/" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath('com.github.DStrand1:ForgeGradle:FG_2.3-SNAPSHOT') {
+            changing = true
+        }
         classpath "com.wynprice.cursemaven:CurseMaven:2.1.4"
     }
 }
@@ -36,8 +39,8 @@ repositories {
 
 dependencies {
     compile 'com.github.phantamanta44:jsr305:1.0.1'
-    deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
-    deobfCompile 'appeng:appliedenergistics2:rv6-stable-7'
+    deobfCompile 'mezz.jei:jei_1.12.2:+'
+    compile files("libs/appliedenergistics2-rv6-stable-7.jar")
     deobfCompile "curse.maven:PackagedAuto:2977147" // 1.0.3.14
 }
 
