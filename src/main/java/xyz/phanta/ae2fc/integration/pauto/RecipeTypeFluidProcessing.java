@@ -27,11 +27,11 @@ public class RecipeTypeFluidProcessing implements IRecipeType {
     private static final ResourceLocation NAME = Ae2FluidCrafting.resource("fluid_processing");
     private static final IntSet SLOTS;
     private static final Color SLOT_COLOUR = new Color(0x8B8BAC);
-    private static final int NUM_SLOTS_CRAFT = 81, NUM_SLOTS_OUT = 9;
+    private static final int NUM_SLOTS_CRAFT = 81, NUM_SLOTS_OUT = 18;
 
     static {
         IntSet slots = new IntOpenHashSet();
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < (NUM_SLOTS_CRAFT + NUM_SLOTS_OUT); i++) {
             slots.add(i);
         }
         SLOTS = IntSets.unmodifiable(slots);

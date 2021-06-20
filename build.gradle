@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: "com.wynprice.cursemaven"
 
-version = "1.0.10"
+version = "1.1.0"
 group = "xyz.phanta.ae2fc"
 archivesBaseName = "ae2fc-1.12.2"
 
@@ -38,7 +38,7 @@ dependencies {
     compile 'com.github.phantamanta44:jsr305:1.0.1'
     deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
     deobfCompile 'appeng:appliedenergistics2:rv6-stable-7'
-    deobfCompile "curse.maven:PackagedAuto:2977147" // 1.0.3.14
+    deobfCompile "curse.maven:PackagedAuto:todo" // TODO: set once PackagedAuto PR is merged
 }
 
 jar {
