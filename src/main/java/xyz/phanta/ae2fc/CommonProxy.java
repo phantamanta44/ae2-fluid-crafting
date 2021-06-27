@@ -60,6 +60,7 @@ public class CommonProxy {
     }
 
     public void onInit(FMLInitializationEvent event) {
+        regHandler.onInit();
         IRecipe disassembleRecipe = ForgeRegistries.RECIPES.getValue(new ResourceLocation(AppEng.MOD_ID, "disassemble"));
         if (disassembleRecipe instanceof DisassembleRecipe) {
             Ae2Reflect.getDisassemblyNonCellMap((DisassembleRecipe)disassembleRecipe).put(

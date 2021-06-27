@@ -1,10 +1,15 @@
 package xyz.phanta.ae2fc.handler;
 
 import appeng.block.AEBaseItemBlock;
+import appeng.block.AEBaseTileBlock;
+import appeng.core.features.ActivityState;
+import appeng.core.features.BlockStackSrc;
+import appeng.tile.AEBaseTile;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.init.FcItems;
@@ -53,6 +58,17 @@ public class RegistryHandler {
         item.setTranslationKey(Ae2FluidCrafting.MOD_ID + ":" + key);
         item.setCreativeTab(FcItems.TAB_AE2FC);
         return item;
+    }
+
+    public void onInit() {
+        for (Pair<String, Block> entry : blocks) {
+            // respects registry overrides, i guess
+            Block block = ForgeRegistries.BLOCKS.getValue(Ae2FluidCrafting.resource(entry.getKey()));
+            if (block instanceof AEBaseTileBlock) {
+                AEBaseTile.registerTileItem(((AEBaseTileBlock)block).getTileEntityClass(),
+                        new BlockStackSrc(block, 0, ActivityState.Enabled));
+            }
+        }
     }
 
 }
