@@ -117,7 +117,7 @@ public enum GuiType {
         }
     }),
 
-    PRIORITY(new PartGuiFactory<FcPriorityHost>(FcPriorityHost.class) {
+    PRIORITY(new PartOrTileGuiFactory<FcPriorityHost>(FcPriorityHost.class) {
         @Override
         protected Object createServerGui(EntityPlayer player, FcPriorityHost inv) {
             return new ContainerPriority(player.inventory, inv);
