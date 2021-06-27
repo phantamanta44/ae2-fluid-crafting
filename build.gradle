@@ -1,17 +1,14 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url 'https://maven.minecraftforge.net/' }
+        mavenLocal()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath "com.wynprice.cursemaven:CurseMaven:2.1.4"
+        classpath 'net.minecraftforge.gradle:ForgeGradle-Phanta:2.4-SNAPSHOT'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: "com.wynprice.cursemaven"
 
 version = "1.0.10"
 group = "xyz.phanta.ae2fc"
@@ -30,15 +27,16 @@ minecraft {
 }
 
 repositories {
-    maven { url 'http://dvs1.progwml6.com/files/maven/' }
+    maven { url 'https://dvs1.progwml6.com/files/maven/' }
     maven { url 'https://jitpack.io/' }
+    maven { url 'https://cursemaven.com/' }
 }
 
 dependencies {
     compile 'com.github.phantamanta44:jsr305:1.0.1'
     deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
-    deobfCompile 'appeng:appliedenergistics2:rv6-stable-7'
-    deobfCompile "curse.maven:PackagedAuto:2977147" // 1.0.3.14
+    deobfCompile "curse.maven:applied-energistics-2-223794:2747063" // rv6-stable-7
+    deobfCompile "curse.maven:packagedauto-308380:2977147" // 1.0.3.14
 }
 
 jar {
