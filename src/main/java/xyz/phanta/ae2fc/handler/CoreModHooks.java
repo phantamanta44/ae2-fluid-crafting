@@ -2,12 +2,14 @@ package xyz.phanta.ae2fc.handler;
 
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.IMachineSet;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.me.MachineSet;
 import appeng.parts.misc.PartInterface;
 import appeng.tile.misc.TileInterface;
 import appeng.util.InventoryAdaptor;
+import com.google.common.collect.Sets;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -24,8 +26,11 @@ import xyz.phanta.ae2fc.tile.TileDualInterface;
 import xyz.phanta.ae2fc.util.FluidConvertingInventoryAdaptor;
 import xyz.phanta.ae2fc.util.FluidConvertingInventoryCrafting;
 import xyz.phanta.ae2fc.util.FluidConvertingItemHandler;
+import xyz.phanta.ae2fc.util.SetBackedMachineSet;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CoreModHooks {
 
@@ -73,20 +78,27 @@ public class CoreModHooks {
 
     public static IMachineSet getMachines(IGrid grid, Class<? extends IGridHost> c) {
         if (c == TileInterface.class) {
-            IMachineSet m1 = grid.getMachines(c);
-            IMachineSet m2 = grid.getMachines(TileDualInterface.class);
-            if (m1 instanceof MachineSet && m2 instanceof MachineSet) {
-                ((MachineSet) m1).addAll((MachineSet) m2);
-            }
-            return m1;
+            return unionMachineSets(grid.getMachines(c), grid.getMachines(TileDualInterface.class));
         } else if (c == PartInterface.class) {
-            IMachineSet m1 = grid.getMachines(c);
-            IMachineSet m2 = grid.getMachines(PartDualInterface.class);
-            if (m1 instanceof MachineSet && m2 instanceof MachineSet) {
-                ((MachineSet) m1).addAll((MachineSet) m2);
-            }
-            return m1;
+            return unionMachineSets(grid.getMachines(c), grid.getMachines(PartDualInterface.class));
+        } else {
+            return grid.getMachines(c);
         }
-        return grid.getMachines(c);
     }
+
+    private static IMachineSet unionMachineSets(IMachineSet a, IMachineSet b) {
+        if (a.isEmpty()) {
+            return b;
+        } else if (b.isEmpty()) {
+            return a;
+        } else if (a instanceof MachineSet && b instanceof MachineSet) {
+            return new SetBackedMachineSet(TileInterface.class, Sets.union((MachineSet)a, (MachineSet)b));
+        } else {
+            Set<IGridNode> union = new HashSet<>();
+            a.forEach(union::add);
+            b.forEach(union::add);
+            return new SetBackedMachineSet(TileInterface.class, union);
+        }
+    }
+
 }
