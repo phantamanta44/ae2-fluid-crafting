@@ -20,7 +20,7 @@ import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import java.awt.Color;
 import java.util.List;
 
-public class RecipeTypeFluidProcessing implements IRecipeType {
+class RecipeTypeFluidProcessing implements IRecipeType {
 
     public static final RecipeTypeFluidProcessing INSTANCE = new RecipeTypeFluidProcessing();
 

@@ -12,16 +12,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.constant.NameConst;
+import xyz.phanta.ae2fc.integration.modmach.ModMachIntegration;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.network.CPacketLoadPattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
 
-public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternEncoder> {
+class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternEncoder> {
 
     @Override
     public Class<ContainerFluidPatternEncoder> getContainerClass() {
@@ -75,6 +78,19 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
             } else {
                 if (ndxOutput < output.length) {
                     output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
+                }
+            }
+        }
+        Iterator<Pair<Boolean, FluidStack>> iter = ModMachIntegration.getHybridFluidStacks(recipeLayout);
+        while (iter.hasNext()) {
+            Pair<Boolean, FluidStack> ing = iter.next();
+            if (ing.getLeft()) {
+                if (ndxCrafting < crafting.length) {
+                    crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getRight());
+                }
+            } else {
+                if (ndxOutput < output.length) {
+                    output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getRight());
                 }
             }
         }

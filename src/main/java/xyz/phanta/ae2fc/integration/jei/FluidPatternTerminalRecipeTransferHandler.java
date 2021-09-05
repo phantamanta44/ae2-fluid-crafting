@@ -16,7 +16,7 @@ import xyz.phanta.ae2fc.parts.PartFluidPatternTerminal;
 
 import javax.annotation.Nullable;
 
-public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternTerminal> {
+class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternTerminal> {
 
     @Override
     public Class<ContainerFluidPatternTerminal> getContainerClass() {
