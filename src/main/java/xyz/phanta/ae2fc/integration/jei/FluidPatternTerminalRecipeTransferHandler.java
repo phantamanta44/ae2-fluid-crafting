@@ -18,6 +18,12 @@ import javax.annotation.Nullable;
 
 class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternTerminal> {
 
+    private final ExtraExtractors ext;
+
+    FluidPatternTerminalRecipeTransferHandler(ExtraExtractors ext) {
+        this.ext = ext;
+    }
+
     @Override
     public Class<ContainerFluidPatternTerminal> getContainerClass() {
         return ContainerFluidPatternTerminal.class;
@@ -38,7 +44,7 @@ class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandle
             PartFluidPatternTerminal tile = (PartFluidPatternTerminal)container.getPatternTerminal();
             IAEItemStack[] crafting = new IAEItemStack[tile.getInventoryByName("crafting").getSlots()];
             IAEItemStack[] output = new IAEItemStack[tile.getInventoryByName("output").getSlots()];
-            FluidPatternEncoderRecipeTransferHandler.transferRecipeSlots(recipeLayout, crafting, output, container.craftingMode);
+            FluidPatternEncoderRecipeTransferHandler.transferRecipeSlots(recipeLayout, crafting, output, container.craftingMode, ext);
             Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketLoadPattern(crafting, output));
         }
         return null;

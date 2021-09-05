@@ -12,10 +12,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.Pair;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.constant.NameConst;
-import xyz.phanta.ae2fc.integration.modmach.ModMachIntegration;
 import xyz.phanta.ae2fc.inventory.ContainerFluidPatternEncoder;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.network.CPacketLoadPattern;
@@ -25,6 +23,12 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 
 class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternEncoder> {
+
+    private final ExtraExtractors ext;
+
+    public FluidPatternEncoderRecipeTransferHandler(ExtraExtractors ext) {
+        this.ext = ext;
+    }
 
     @Override
     public Class<ContainerFluidPatternEncoder> getContainerClass() {
@@ -42,14 +46,14 @@ class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler
             TileFluidPatternEncoder tile = container.getTile();
             IAEItemStack[] crafting = new IAEItemStack[tile.getCraftingSlots().getSlotCount()];
             IAEItemStack[] output = new IAEItemStack[tile.getOutputSlots().getSlotCount()];
-            transferRecipeSlots(recipeLayout, crafting, output, false);
+            transferRecipeSlots(recipeLayout, crafting, output, false, ext);
             Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketLoadPattern(crafting, output));
         }
         return null;
     }
 
     public static void transferRecipeSlots(IRecipeLayout recipeLayout, IAEItemStack[] crafting, IAEItemStack[] output,
-                                           boolean retainEmptyInputs) {
+                                           boolean retainEmptyInputs, ExtraExtractors ext) {
         int ndxCrafting = 0, ndxOutput = 0;
         for (IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
             if (ing.isInput()) {
@@ -81,16 +85,16 @@ class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler
                 }
             }
         }
-        Iterator<Pair<Boolean, FluidStack>> iter = ModMachIntegration.getHybridFluidStacks(recipeLayout);
+        Iterator<WrappedIngredient<FluidStack>> iter = ext.extractFluids(recipeLayout).iterator();
         while (iter.hasNext()) {
-            Pair<Boolean, FluidStack> ing = iter.next();
-            if (ing.getLeft()) {
+            WrappedIngredient<FluidStack> ing = iter.next();
+            if (ing.isInput()) {
                 if (ndxCrafting < crafting.length) {
-                    crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getRight());
+                    crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getIngredient());
                 }
             } else {
                 if (ndxOutput < output.length) {
-                    output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getRight());
+                    output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getIngredient());
                 }
             }
         }

@@ -37,6 +37,7 @@ dependencies {
     deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
     deobfCompile "curse.maven:applied-energistics-2-223794:2747063" // rv6-stable-7
     deobfCompile "curse.maven:packagedauto-308380:2977147" // 1.0.3.14
+    deobfCompile "curse.maven:modular-machinery-270790:2761302" // 1.11.1
 }
 
 jar {
