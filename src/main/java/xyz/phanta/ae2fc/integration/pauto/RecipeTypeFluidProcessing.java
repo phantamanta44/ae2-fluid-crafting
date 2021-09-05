@@ -15,9 +15,12 @@ import thelm.packagedauto.api.IRecipeType;
 import thelm.packagedauto.integration.jei.PackagedAutoJEIPlugin;
 import xyz.phanta.ae2fc.Ae2FluidCrafting;
 import xyz.phanta.ae2fc.init.FcBlocks;
+import xyz.phanta.ae2fc.integration.jei.FcJeiPlugin;
+import xyz.phanta.ae2fc.integration.jei.WrappedIngredient;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.List;
 
 class RecipeTypeFluidProcessing implements IRecipeType {
@@ -125,6 +128,19 @@ class RecipeTypeFluidProcessing implements IRecipeType {
             } else {
                 if (ndxOutput < NUM_SLOTS_OUT) {
                     tfrs.put(NUM_SLOTS_CRAFT + ndxOutput++, ItemFluidPacket.newStack(ing.getDisplayedIngredient()));
+                }
+            }
+        }
+        Iterator<WrappedIngredient<FluidStack>> iter = FcJeiPlugin.getExtraExtractors().extractFluids(recipeLayout).iterator();
+        while (iter.hasNext()) {
+            WrappedIngredient<FluidStack> ing = iter.next();
+            if (ing.isInput()) {
+                if (ndxCrafting < NUM_SLOTS_CRAFT) {
+                    tfrs.put(ndxCrafting++, ItemFluidPacket.newStack(ing.getIngredient()));
+                }
+            } else {
+                if (ndxOutput < NUM_SLOTS_OUT) {
+                    tfrs.put(NUM_SLOTS_CRAFT + ndxOutput++, ItemFluidPacket.newStack(ing.getIngredient()));
                 }
             }
         }

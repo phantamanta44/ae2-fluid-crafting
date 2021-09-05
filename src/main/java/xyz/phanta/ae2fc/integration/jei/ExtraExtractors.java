@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-class ExtraExtractors {
+public class ExtraExtractors {
 
     @Nullable
     private final IngredientExtractor<FluidStack> extModMach;

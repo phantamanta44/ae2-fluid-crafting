@@ -2,7 +2,7 @@ package xyz.phanta.ae2fc.integration.jei;
 
 import javax.annotation.Nullable;
 
-class WrappedIngredient<T> {
+public class WrappedIngredient<T> {
 
     @Nullable
     private final T ingredient;
