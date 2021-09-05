@@ -55,8 +55,12 @@ public class CommonProxy {
         netHandler.registerMessage(new CPacketTransposeFluid.Handler(), CPacketTransposeFluid.class, 3, Side.SERVER);
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, 4, Side.SERVER);
         if (Loader.isModLoaded("packagedauto")) {
-            PackagedFluidCrafting.init();
+            initPackagedAutoIntegration();
         }
+    }
+
+    protected void initPackagedAutoIntegration() {
+        PackagedFluidCrafting.init();
     }
 
     public void onInit(FMLInitializationEvent event) {

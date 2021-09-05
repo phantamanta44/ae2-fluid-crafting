@@ -13,6 +13,7 @@ import xyz.phanta.ae2fc.client.render.DropColourHandler;
 import xyz.phanta.ae2fc.client.render.RenderIngredientBuffer;
 import xyz.phanta.ae2fc.handler.RegistryHandler;
 import xyz.phanta.ae2fc.init.FcItems;
+import xyz.phanta.ae2fc.integration.pauto.PackagedFluidCrafting;
 import xyz.phanta.ae2fc.item.ItemFluidDrop;
 import xyz.phanta.ae2fc.item.ItemFluidPacket;
 import xyz.phanta.ae2fc.tile.TileIngredientBuffer;
@@ -31,6 +32,12 @@ public class ClientProxy extends CommonProxy {
         super.onPreInit(event);
         MinecraftForge.EVENT_BUS.register(dropColourHandler);
         ClientRegistry.bindTileEntitySpecialRenderer(TileIngredientBuffer.class, new RenderIngredientBuffer());
+    }
+
+    @Override
+    protected void initPackagedAutoIntegration() {
+        super.initPackagedAutoIntegration();
+        PackagedFluidCrafting.initClient();
     }
 
     @Override
