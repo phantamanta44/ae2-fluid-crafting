@@ -16,7 +16,13 @@ import xyz.phanta.ae2fc.parts.PartFluidPatternTerminal;
 
 import javax.annotation.Nullable;
 
-public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternTerminal> {
+class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternTerminal> {
+
+    private final ExtraExtractors ext;
+
+    FluidPatternTerminalRecipeTransferHandler(ExtraExtractors ext) {
+        this.ext = ext;
+    }
 
     @Override
     public Class<ContainerFluidPatternTerminal> getContainerClass() {
@@ -29,16 +35,16 @@ public class FluidPatternTerminalRecipeTransferHandler implements IRecipeTransfe
                                                EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (container.craftingMode) {
             if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-                return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_PROCESSING_RECIPE_ONLY));
+                return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_CRAFTING_RECIPE_ONLY));
             }
         } else if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-            return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_CRAFTING_RECIPE_ONLY));
+            return new RecipeTransferErrorTooltip(I18n.format(NameConst.TT_PROCESSING_RECIPE_ONLY));
         }
         if (doTransfer && container.getPatternTerminal() instanceof PartFluidPatternTerminal) {
             PartFluidPatternTerminal tile = (PartFluidPatternTerminal)container.getPatternTerminal();
             IAEItemStack[] crafting = new IAEItemStack[tile.getInventoryByName("crafting").getSlots()];
             IAEItemStack[] output = new IAEItemStack[tile.getInventoryByName("output").getSlots()];
-            FluidPatternEncoderRecipeTransferHandler.transferRecipeSlots(recipeLayout, crafting, output, container.craftingMode);
+            FluidPatternEncoderRecipeTransferHandler.transferRecipeSlots(recipeLayout, crafting, output, container.craftingMode, ext);
             Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketLoadPattern(crafting, output));
         }
         return null;

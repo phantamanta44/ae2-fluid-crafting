@@ -20,8 +20,15 @@ import xyz.phanta.ae2fc.network.CPacketLoadPattern;
 import xyz.phanta.ae2fc.tile.TileFluidPatternEncoder;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
 
-public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternEncoder> {
+class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransferHandler<ContainerFluidPatternEncoder> {
+
+    private final ExtraExtractors ext;
+
+    public FluidPatternEncoderRecipeTransferHandler(ExtraExtractors ext) {
+        this.ext = ext;
+    }
 
     @Override
     public Class<ContainerFluidPatternEncoder> getContainerClass() {
@@ -39,14 +46,14 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
             TileFluidPatternEncoder tile = container.getTile();
             IAEItemStack[] crafting = new IAEItemStack[tile.getCraftingSlots().getSlotCount()];
             IAEItemStack[] output = new IAEItemStack[tile.getOutputSlots().getSlotCount()];
-            transferRecipeSlots(recipeLayout, crafting, output, false);
+            transferRecipeSlots(recipeLayout, crafting, output, false, ext);
             Ae2FluidCrafting.PROXY.getNetHandler().sendToServer(new CPacketLoadPattern(crafting, output));
         }
         return null;
     }
 
     public static void transferRecipeSlots(IRecipeLayout recipeLayout, IAEItemStack[] crafting, IAEItemStack[] output,
-                                           boolean retainEmptyInputs) {
+                                           boolean retainEmptyInputs, ExtraExtractors ext) {
         int ndxCrafting = 0, ndxOutput = 0;
         for (IGuiIngredient<ItemStack> ing : recipeLayout.getItemStacks().getGuiIngredients().values()) {
             if (ing.isInput()) {
@@ -75,6 +82,19 @@ public class FluidPatternEncoderRecipeTransferHandler implements IRecipeTransfer
             } else {
                 if (ndxOutput < output.length) {
                     output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getDisplayedIngredient());
+                }
+            }
+        }
+        Iterator<WrappedIngredient<FluidStack>> iter = ext.extractFluids(recipeLayout).iterator();
+        while (iter.hasNext()) {
+            WrappedIngredient<FluidStack> ing = iter.next();
+            if (ing.isInput()) {
+                if (ndxCrafting < crafting.length) {
+                    crafting[ndxCrafting++] = ItemFluidPacket.newAeStack(ing.getIngredient());
+                }
+            } else {
+                if (ndxOutput < output.length) {
+                    output[ndxOutput++] = ItemFluidPacket.newAeStack(ing.getIngredient());
                 }
             }
         }

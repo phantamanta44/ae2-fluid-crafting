@@ -55,11 +55,16 @@ public class CommonProxy {
         netHandler.registerMessage(new CPacketTransposeFluid.Handler(), CPacketTransposeFluid.class, 3, Side.SERVER);
         netHandler.registerMessage(new CPacketSwitchGuis.Handler(), CPacketSwitchGuis.class, 4, Side.SERVER);
         if (Loader.isModLoaded("packagedauto")) {
-            PackagedFluidCrafting.init();
+            initPackagedAutoIntegration();
         }
     }
 
+    protected void initPackagedAutoIntegration() {
+        PackagedFluidCrafting.init();
+    }
+
     public void onInit(FMLInitializationEvent event) {
+        regHandler.onInit();
         IRecipe disassembleRecipe = ForgeRegistries.RECIPES.getValue(new ResourceLocation(AppEng.MOD_ID, "disassemble"));
         if (disassembleRecipe instanceof DisassembleRecipe) {
             Ae2Reflect.getDisassemblyNonCellMap((DisassembleRecipe)disassembleRecipe).put(
