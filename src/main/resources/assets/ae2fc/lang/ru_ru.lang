@@ -1,0 +1,33 @@
+itemGroup.ae2fc=AE2 Fluid Crafting
+
+tile.ae2fc:fluid_discretizer.name=ME дескретизатор для жидкости
+tile.ae2fc:fluid_pattern_encoder.name=Кодировщик шаблона для жидкости
+tile.ae2fc:fluid_packet_decoder.name=ME Кодировщик шаблона для жидкости
+tile.ae2fc:ingredient_buffer.name=Буфер ингредиента
+tile.ae2fc:burette.name=Точная бюретка
+tile.ae2fc:dual_interface.name=ME 2-й интерфейс
+tile.ae2fc:part_dual_interface.name=ME 2-й интерфейс
+
+item.ae2fc:fluid_drop.name=Выбросить %s
+item.ae2fc:fluid_packet.name=Пакет жидкости
+item.ae2fc:dense_encoded_pattern.name=Шаблон кодировщика
+item.ae2fc:part_dual_interface.name=ME 2-й интерфейс
+item.ae2fc:part_fluid_pattern_terminal.name=ME терминал шаблона для жидкости
+
+ae2fc.gui.fluid_pattern_encoder=Кодировщик шаблона для жидкости
+ae2fc.gui.fluid_packet_decoder=ME Кодировщик пакета для жидкости
+ae2fc.gui.ingredient_buffer=Буфер ингредиента
+ae2fc.gui.burette=Точная бюретка
+
+ae2fc.tooltip.fluid_packet=Используй кодировщик пакета для жидкости, чтобы\nпреобразовать её обратно в жидкость.
+ae2fc.tooltip.invalid_fluid=Недопустимая жидкость!
+ae2fc.tooltip.processing_recipe_only=Нет обрабатываемого рецепта!
+ae2fc.tooltip.crafting_recipe_only=Нет изготавливающего рецепта!
+ae2fc.tooltip.encode_pattern=Кодировщик шаблона
+ae2fc.tooltip.empty=Пустой
+ae2fc.tooltip.dump_tank=Выгрузить содержимое резервуара
+ae2fc.tooltip.transpose_in=Перенести в Резервуар
+ae2fc.tooltip.transpose_out=Перенести в Предмет
+
+ae2fc.pauto.fluid_processing.name=Обработка жидкости
+ae2fc.pauto.fluid_processing.name_short=Жидкость
