@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "xyz.phanta.ae2fc.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "ae2fc.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "normal": {
-      "model": "ae2fc:fluid_packet_decoder"
-    }
-  }
-}

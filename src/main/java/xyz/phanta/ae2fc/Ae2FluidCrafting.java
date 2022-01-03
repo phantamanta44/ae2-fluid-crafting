@@ -1,48 +1,38 @@
 package xyz.phanta.ae2fc;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Ae2FluidCrafting.MOD_ID, version = Ae2FluidCrafting.VERSION, useMetadata = true)
+// The value here should match an entry in the META-INF/mods.toml file
+@Mod(Ae2FluidCrafting.MOD_ID)
 public class Ae2FluidCrafting {
-
     public static final String MOD_ID = "ae2fc";
     public static final String VERSION = "1.0.10";
-
-    @Mod.Instance(MOD_ID)
     public static Ae2FluidCrafting INSTANCE;
 
-    @SidedProxy(
-            clientSide = "xyz.phanta.ae2fc.client.ClientProxy",
-            serverSide = "xyz.phanta.ae2fc.CommonProxy")
-    public static CommonProxy PROXY;
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    public static Logger LOGGER;
-
-    @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event) {
-        LOGGER = event.getModLog();
-        PROXY.onPreInit(event);
+    public Ae2FluidCrafting() {
+        if (INSTANCE != null) {
+            throw new IllegalStateException();
+        } else {
+            INSTANCE = this;
+        }
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(this::commonSetup);
+        bus.addListener(this::clientSetup);
     }
 
-    @Mod.EventHandler
-    public void onInit(FMLInitializationEvent event) {
-        PROXY.onInit(event);
+    private void commonSetup(final FMLCommonSetupEvent event) {
+
     }
 
-    @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event) {
-        PROXY.onPostInit(event);
-    }
+    private void clientSetup(final FMLClientSetupEvent event) {
 
-    public static ResourceLocation resource(String path) {
-        return new ResourceLocation(MOD_ID, path);
     }
-
 }
