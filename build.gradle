@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle-Phanta:2.4-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -29,13 +29,13 @@ minecraft {
 repositories {
     maven { url 'https://dvs1.progwml6.com/files/maven/' }
     maven { url 'https://jitpack.io/' }
-    maven { url 'https://cursemaven.com/' }
+    maven { url 'https://cfa2.cursemaven.com/' }
 }
 
 dependencies {
     compile 'com.github.phantamanta44:jsr305:1.0.1'
     deobfCompile 'mezz.jei:jei_1.12.2:4.15.0.293'
-    deobfCompile "curse.maven:applied-energistics-2-223794:2747063" // rv6-stable-7
+    deobfCompile "curse.maven:ae2-extended-life-570458:3649419" // rv6-stable-7 v50c
     deobfCompile "curse.maven:packagedauto-308380:2977147" // 1.0.3.14
     deobfCompile "curse.maven:modular-machinery-270790:2761302" // 1.11.1
 }
