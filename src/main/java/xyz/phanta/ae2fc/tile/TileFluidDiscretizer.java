@@ -207,9 +207,15 @@ public class TileFluidDiscretizer extends AENetworkTile implements ICellContaine
             try {
                 List<IAEItemStack> mappedChanges = new ArrayList<>();
                 for (IAEFluidStack fluidStack : change) {
-                    IAEItemStack itemStack = ItemFluidDrop.newAeStack(fluidStack);
+                    boolean removed = fluidStack.getStackSize() < 0;
+                    fluidStack = fluidStack.copy();
+                    IAEItemStack itemStack = ItemFluidDrop.newAeStack(fluidStack.setStackSize(Math.abs(fluidStack.getStackSize())));
                     if (itemStack != null) {
-                        mappedChanges.add(itemStack);
+                        if (removed) {
+                            mappedChanges.add(itemStack.setStackSize(-itemStack.getStackSize()));
+                        } else {
+                            mappedChanges.add(itemStack);
+                        }
                     }
                 }
                 getProxy().getGrid().<IStorageGrid>getCache(IStorageGrid.class)
